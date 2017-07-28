@@ -1,0 +1,293 @@
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+# ================= Startup applications =================
+
+exec --no-startup-id urxvtd
+exec --no-startup-id nm-applet
+exec --no-startup-id nitrogen --restore
+
+# Disabled/not used for the current setup
+#exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
+#exec --no-startup-id dconf write /org/gnome/settings-daemon/plugins/cursor/active false
+#exec --no-startup-id xrdb -merge .config/Xressources
+#exec --no-startup-id dunst
+#exec --no-startup-id pasystray
+#exec --no-startup-id xautolock -time 10 -locker "i3lock-fancy -f Source-Sans-Pro"
+#exec --no-startup-id pasystray
+
+
+# ================= Plasma Integration =================
+
+# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
+exec --no-startup-id wmctrl -c Plasma
+for_window [title="Arbeitsfläche — Plasma"] kill; floating enable; border none
+for_window [title="Desktop — Plasma"] kill; floating enable; border none
+#for_window [class="ksplashqml"] kill; floating enable; border none
+
+
+# ================= Fonts/Colors =================
+
+#font xft:Dosis 11
+#font pango: Roboto Condensed 11
+font xft:Source Sans Pro, Awesome 10
+
+# config colors
+# class                 border  backgr. text    indicator
+client.focused          #2B83A6 #2B83A6 #FFFFFF #DDDDDD
+client.focused_inactive #212121 #212121 #86888C #292D2E
+client.unfocused        #212121 #212121 #86888C #292D2E
+client.urgent           #2F343A #D64E4E #FFFFFF #D64E4E
+client.placeholder      #212121 #0C0C0C #FFFFFF #212121
+client.background       #212121
+
+# ================= Keybinds =================
+
+set $mod Mod1
+
+# Media keys
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +2% && pkill -RTMIN+1 i3blocks 
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -2% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle && pkill -RTMIN+1
+
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
+bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym XF86HomePage exec chromium
+
+
+#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -font "Helvetica Neue 15" '
+#bindsym $mod+o exec "dmenu_run -i -l 20 -fn 'Dosis-11' -w 500 -x 660 -y 200 -p launch"
+bindsym $mod+o exec --no-startup-id rofi -show run -theme royal-sky
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+bindsym $mod+Return exec urxvtc
+bindsym $mod+t exec urxvtc
+
+# explorer
+bindsym $mod+e exec dolphin
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# remove border
+bindsym $mod+u border none
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+odiaeresis focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+odiaeresis move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+q layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+#bindsym $mod+d focus child
+
+bindsym Print exec --no-startup-id spectacle
+
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Hard logout?' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+Shift+x            exec --no-startup-id i3lock-fancy -f Source-Sans-ProX
+
+# ================= Workspace setups =================
+
+# customize workspace name
+set $WS1   "1:   Chromium "
+set $WS2   "2:   Chromium "
+set $WS3   "3:   Code "
+set $WS4   "4:   Code "
+set $WS5   "5:   Bash "
+set $WS6   "6:   General "
+set $WS7   "7:   General "
+set $WS8   "8:   General "
+set $WS9   "9:   General "
+set $WS0   "10:   Mail "
+
+workspace $WS1 output VGA1
+workspace $WS2 output eDP1
+workspace $WS3 output VGA1
+workspace $WS4 output eDP1
+workspace $WS5 output VGA1
+#workspace $WS6 output eDP1
+#workspace $WS7 output eDP1
+#workspace $WS8 output eDP1
+#workspace $WS9 output eDP1
+workspace $WS0 output eDP1
+
+# switch to workspace
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+bindsym $mod+8 workspace $WS8
+bindsym $mod+9 workspace $WS9
+bindsym $mod+0 workspace $WS0
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $WS1
+bindsym $mod+Shift+2 move container to workspace $WS2
+bindsym $mod+Shift+3 move container to workspace $WS3
+bindsym $mod+Shift+4 move container to workspace $WS4
+bindsym $mod+Shift+5 move container to workspace $WS5
+bindsym $mod+Shift+6 move container to workspace $WS6
+bindsym $mod+Shift+7 move container to workspace $WS7
+bindsym $mod+Shift+8 move container to workspace $WS8
+bindsym $mod+Shift+9 move container to workspace $WS9
+bindsym $mod+Shift+0 move container to workspace $WS0
+
+# ================= Alternate modes setups =================
+
+# resize window (you can also use the mouse for that)
+mode "  " {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym odiaeresis resize grow width 10 px or 10 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize grow width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize shrink width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "  "
+
+# ================= Bar setups =================
+
+bar {
+#	tray_output primary
+	font pango:Awesome, pango:Source Code Pro 11
+    position top
+
+    workspace_buttons       yes
+
+    colors {
+        background  #212121
+        statusline  #DDDDDD
+        separator   #666666
+        # class             border  backgr. text
+        focused_workspace   #2B83A6 #2B83A6 #FFFFFF
+        active_workspace    #212121 #212121 #FFFFFF
+        inactive_workspace  #212121 #212121 #86888C
+        urgent_workspace    #2F343A #D64E4E #FFFFFF
+    }
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+}
+
+# ================= Windowing setups =================
+for_window [class="yakuake"] floating enable;
+## Avoid tiling popups, dropdown windows from plasma
+# for the first time, manually resize them, i3 will remember the setting for floating windows
+for_window [instance="Download"] floating enable
+for_window [class="Xfce4-notifyd"] floating enable
+for_window [class="Xfce4-notifyd"] border none
+for_window [class="YADWIN"] border none
+for_window [class="YADWIN"] floating enable
+for_window [window_role="plugin_ui"] floating enable
+for_window [title="Menu Update"] floating enable
+for_window [title="___"] floating enable
+for_window [class="^.*"] border pixel 3
+#for_window [class="Conky"] floating enable
+for_window [class="Conky"] border none
+for_window [class="Dialog"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="plasmashell"] floating enable;
+for_window [class="Plasma"] floating enable; border none
+for_window [title="plasma-desktop"] floating enable; border none
+for_window [title="win7"] floating enable; border none
+for_window [class="krunner"] floating enable; border none
+for_window [class="Kmix"] floating enable; border none
+for_window [class="Klipper"] floating enable; border none
+for_window [class="Plasmoidviewer"] floating enable; border none
+for_window [class="Skype" window_role="ConversationsWindow"] floating enable;
+for_window [class="Xilinx SDK" title="       "] floating disable;
+
+for_window [class="^.*"]                border pixel 0
+
+for_window [window_role="pop-up"]       floating enable
+for_window [window_role="task_dialog"]  floating enable
+for_window [title="Preferences$"]       floating enable
+
+# ================= Additional i3 config =================
+# set popups during fullscreen mode
+popup_during_fullscreen smart
+
+focus_follows_mouse  no
+
+# window border settings
+new_window pixel    0
+new_float normal    0
+hide_edge_borders   none
+
+smart_gaps on
+gaps inner 8
+gaps outer 2
