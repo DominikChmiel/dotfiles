@@ -2,6 +2,7 @@
 
 # Initializes submodules
 git submodule init
+git submodule update
 
 # Path replacements
 sed 's|{{projectdir}}|'$(pwd)'|g' i3/i3blocks.conf.src > i3/i3blocks.conf
