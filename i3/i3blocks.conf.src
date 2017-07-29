@@ -6,7 +6,7 @@ markup=none
 [volume-pulseaudio]
 label=🔉
 interval=once
-command={{projectdir}}/i3blocks-contrib/volume-pulseaudio/volume-pulseaudio -a
+command={{projectdir}}/i3blocks-contrib/volume-pulseaudio/volume-pulseaudio -a -i 2
 signal=1
 
 
