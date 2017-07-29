@@ -40,6 +40,8 @@ Xft.antialias:  true
 Xft.rgba:       rgb
 Xft.hinting:    true
 Xft.hintstyle:  hintslight
+Xft.lcdfilter:  lcddefault
+Xft.autohint: 0
 
 ! special
 *.foreground:   #93a1a1
@@ -83,8 +85,10 @@ URxvt.font: xft:Hack:size=10
 URxvt.letterSpace:0
 URxvt.scrollBar: false
 ! Set terminal padding
-URxvt.internalBorder: 15
+URxvt.internalBorder: 0
 URxvt*.depth: 24
+URxvt.transparent:   true
+URxvt.shading:       30
 
 ! Enables copy/paste with Ctrl-Shift-C/V
 URxvt.iso14755: false
@@ -94,16 +98,11 @@ URxvt.keysym.Shift-Control-C: perl:clipboard:copy
 URxvt.keysym.Shift-Control-V: perl:clipboard:paste
 
 *.saveLines: 8192
-*.internalBorder: 10
+*.internalBorder: 0
 *.cursorUnderline: true
 *.cursorBlink: true
 *.dynamicColors:on
 
-Xft.autohint: 0
-Xft.dpi: 96
-Xft.hintstyle: hintnone
-Xft.lcdfilter: lcddefault
-Xft.rgba: rgb
 
 ! Rofi
 rofi.color-window: argb: EE000000, argb: EE000000, argb: EE000000
