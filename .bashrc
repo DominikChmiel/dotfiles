@@ -143,4 +143,6 @@ esac
 [ -r /usr/share/git/completion/git-completion.bash  ] && . /usr/share/git/completion/git-completion.bash
 
 # Load ressources
-[ -v "DISPLAY" ] && xrdb -merge ~/.Xressources
+if xset q &>/dev/null; then
+     xrdb -merge ~/.Xressources
+fi

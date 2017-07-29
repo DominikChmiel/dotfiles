@@ -81,21 +81,23 @@ Xft.autohint: 0
 *.color15:      #fdf6e3
 
 
-URxvt.font: xft:Hack:size=10
-URxvt.letterSpace:0
-URxvt.scrollBar: false
+URxvt.letterSpace:          0
 ! Set terminal padding
-URxvt.internalBorder: 0
-URxvt*.depth: 24
-URxvt.transparent:   true
-URxvt.shading:       30
+URxvt.internalBorder:       0
+URxvt*.depth:               24
+URxvt.transparent:          true
+URxvt.shading:              30
+URxvt.scrollBar:            false
+URxvt.foreground:           white
+URxvt.background:           black
+URxvt.secondaryScroll:      true
+URxvt.urlLauncher:          chromium
+URxvt.matcher.button:       1
+URxvt.font:                 xft:Hack:size=10
+URxvt.tabbed.secondaryScroll: true
+URxvt*inheritPixmap:        true
+URxvt.perl-ext-common:      default,matcher
 
-! Enables copy/paste with Ctrl-Shift-C/V
-URxvt.iso14755: false
-URxvt.iso14755_52: false
-URxvt.perl-ext-common: default,clipboard
-URxvt.keysym.Shift-Control-C: perl:clipboard:copy
-URxvt.keysym.Shift-Control-V: perl:clipboard:paste
 
 *.saveLines: 8192
 *.internalBorder: 0
@@ -104,6 +106,6 @@ URxvt.keysym.Shift-Control-V: perl:clipboard:paste
 *.dynamicColors:on
 
 
-! Rofi
-rofi.color-window: argb: EE000000, argb: EE000000, argb: EE000000
-rofi.color-normal: argb: 00000000, #DEDEDE, argb: 00000000, #DEDEDE
+! Rofi config file
+rofi.lines: 12
+rofi.font: Hack 12
