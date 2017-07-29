@@ -12,7 +12,7 @@ sed 's|{{projectdir}}|'$(pwd)'|g' i3/i3blocks.conf.src > i3/i3blocks.conf
 ln -s $(pwd)/.wgetrc ~/.wgetrc
 ln -s $(pwd)/.bashrc ~/.bashrc
 ln -s $(pwd)/.nanorc ~/.nanorc
-ln -s $(pwd)/.Xressources ~/.Xressources
+ln -s $(pwd)/.Xresources ~/.Xresources
 ln -s $(pwd)/.dircolors ~/.dircolors
 ln -s $(pwd)/.face ~/.face
 ln -s $(pwd)/.face ~/.face.icon
