@@ -68,7 +68,7 @@ bindsym XF86HomePage exec chromium
 
 #bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -font "Helvetica Neue 15" '
 #bindsym $mod+o exec "dmenu_run -i -l 20 -fn 'Dosis-11' -w 500 -x 660 -y 200 -p launch"
-bindsym $mod+o exec --no-startup-id rofi -show run -theme royal-sky
+bindsym $mod+o exec --no-startup-id rofi -show run -theme android_notification
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod

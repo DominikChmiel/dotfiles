@@ -40,6 +40,8 @@ Xft.antialias:  true
 Xft.rgba:       rgb
 Xft.hinting:    true
 Xft.hintstyle:  hintslight
+Xft.lcdfilter:  lcddefault
+Xft.autohint: 0
 
 ! special
 *.foreground:   #93a1a1
@@ -77,3 +79,33 @@ Xft.hintstyle:  hintslight
 ! white
 *.color7:       #93a1a1
 *.color15:      #fdf6e3
+
+
+URxvt.letterSpace:          0
+! Set terminal padding
+URxvt.internalBorder:       0
+URxvt*.depth:               24
+URxvt.transparent:          true
+URxvt.shading:              30
+URxvt.scrollBar:            false
+URxvt.foreground:           white
+URxvt.background:           black
+URxvt.secondaryScroll:      true
+URxvt.urlLauncher:          chromium
+URxvt.matcher.button:       1
+URxvt.font:                 xft:Hack:size=10
+URxvt.tabbed.secondaryScroll: true
+URxvt*inheritPixmap:        true
+URxvt.perl-ext-common:      default,matcher
+
+
+*.saveLines: 8192
+*.internalBorder: 0
+*.cursorUnderline: true
+*.cursorBlink: true
+*.dynamicColors:on
+
+
+! Rofi config file
+rofi.lines: 12
+rofi.font: Hack 12
