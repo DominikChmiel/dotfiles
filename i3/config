@@ -167,7 +167,7 @@ workspace $WS5 output VGA1
 #workspace $WS7 output eDP1
 #workspace $WS8 output eDP1
 #workspace $WS9 output eDP1
-workspace $WS0 output eDP1
+workspace $WS0 output VGA1
 
 # switch to workspace
 bindsym $mod+1 workspace $WS1

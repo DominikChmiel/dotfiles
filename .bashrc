@@ -6,8 +6,8 @@
 [[ $- != *i* ]] && return
 
 # Source functions that shouldn't be in the git repo
-if [ -f ./private_funcs.sh ]; then
-    source ./private_funcs.sh
+if [ -f ./.private_funcs.sh ]; then
+    source ./.private_funcs.sh
 fi
 
 
