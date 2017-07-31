@@ -144,5 +144,5 @@ esac
 
 # Load ressources
 if xset q &>/dev/null; then
-     xrdb -merge ~/.Xressources
+     xrdb -merge ~/.Xresources
 fi

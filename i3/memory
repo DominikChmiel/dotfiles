@@ -1,0 +1,32 @@
+#!/bin/bash
+# Adapted from i3blocks/scripts/memory
+awk '
+/^MemTotal:/ {
+	mem_total=$2
+}
+/^MemAvailable:/ {
+	mem_avail=$2
+}
+/^SwapTotal:/ {
+	swap_total=$2
+}
+/^SwapFree:/ {
+	swap_free=$2
+}
+END {
+	mem_avail = mem_avail/1024/1024;
+	swap_free = swap_free/1024/1024;
+	if (mem_avail < 1) {
+		printf("%s%.1fG%s", "<span foreground=\"red\">", mem_avail, "</span>");
+	} else {
+		printf("%.1fG", mem_avail);
+	}
+	printf(" / ");
+	if (swap_free < 1) {
+		printf("%s%.1fG%s", "<span foreground=\"red\">", swap_free, "</span>");
+	} else {
+		printf("%.1fG", swap_free);
+	}
+	printf("\n");
+}
+' /proc/meminfo

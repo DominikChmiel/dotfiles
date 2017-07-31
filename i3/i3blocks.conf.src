@@ -4,15 +4,28 @@ color=#F3F4F5
 markup=none
 
 [volume-pulseaudio]
-label=🔉
+markup=pango
+full_text=
+label=
 interval=once
-command={{projectdir}}/i3blocks-contrib/volume-pulseaudio/volume-pulseaudio -a -i 2
+command=echo "$(bash {{projectdir}}/i3blocks-contrib/volume-pulseaudio/volume-pulseaudio -L '<span font="FontAwesome"> </span>' -M '<span font="FontAwesome"> </span>' -H '<span font="FontAwesome"> </span>' -d -i 2 -F 3)"
 signal=1
 
 
 [ram]
+markup=pango
 label=
-command=/usr/lib/i3blocks/memory | grep -E -o '[0-9].[0-9]?G'
+command=bash {{projectdir}}/i3/memory
+interval=30
+
+[memory]
+label=
+instance=swap;total
+interval=30
+
+[memory]
+label=
+instance=mem;free
 interval=30
 
 [disk-home]
@@ -27,6 +40,6 @@ interval=5
 
 [shutdown_menu]
 markup=pango
-full_text=<span font=\"FontAwesome\"></span>
-command={{projectdir}}/i3blocks-contrib/shutdown_menu/shutdown_menu -c; echo "<span font=\"FontAwesome\"></span>"
-interval=once
+full_text=<span font="FontAwesome"></span>
+command={{projectdir}}/i3blocks-contrib/shutdown_menu/shutdown_menu; echo "<span font=\"FontAwesome\"></span>"
+

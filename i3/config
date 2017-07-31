@@ -6,7 +6,7 @@
 
 exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
-exec --no-startup-id nitrogen --restore
+exec_always --no-startup-id nitrogen --restore
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
@@ -156,7 +156,7 @@ set $WS6   "6:   General "
 set $WS7   "7:   General "
 set $WS8   "8:   General "
 set $WS9   "9:   General "
-set $WS0   "10:   Mail "
+set $WS0   "10:   Mail "
 
 workspace $WS1 output VGA1
 workspace $WS2 output eDP1
