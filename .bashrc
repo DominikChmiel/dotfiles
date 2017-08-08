@@ -61,6 +61,7 @@ alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'
 alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/'
 
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"

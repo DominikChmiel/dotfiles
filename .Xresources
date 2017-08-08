@@ -97,7 +97,7 @@ URxvt.font:                 xft:Hack:size=10
 URxvt.tabbed.secondaryScroll: true
 URxvt*inheritPixmap:        true
 URxvt.perl-ext-common:      default,matcher
-
+URxvt.iso14755:		    false
 
 *.saveLines: 8192
 *.internalBorder: 0
@@ -109,3 +109,4 @@ URxvt.perl-ext-common:      default,matcher
 ! Rofi config file
 rofi.lines: 12
 rofi.font: Hack 12
+
