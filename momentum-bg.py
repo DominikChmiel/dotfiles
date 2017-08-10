@@ -27,16 +27,14 @@ def getTodaysImagePath():
     if dbValue:
         val = dbValue[0].decode('utf-16', errors='ignore')
         js = json.loads(val)
-
         return js['filename']
 
     return None
 
 while True:
     pt = getTodaysImagePath()
-
     if pt:
-        wallFile = "wallpaper" + os.path.splitext(pt)[1]
+        wallFile = os.path.join(os.path.expanduser("~/.config/i3") ,"wallpaper")
 
         r = requests.get(pt, stream=True)
 
@@ -44,7 +42,7 @@ while True:
             with open(wallFile, 'wb') as f:
                 r.raw.decode_content = True
                 shutil.copyfileobj(r.raw, f)
-            os.system('nitrogen --set-scaled ' + wallFile)
+            os.system('nitrogen --set-zoom-fill ' + wallFile)
         sys.exit(0)
     # Check every minute
     time.sleep(60)

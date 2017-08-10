@@ -86,7 +86,7 @@ URxvt.letterSpace:          0
 URxvt.internalBorder:       0
 URxvt*.depth:               24
 URxvt.transparent:          true
-URxvt.shading:              30
+URxvt.shading:              40
 URxvt.scrollBar:            false
 URxvt.foreground:           white
 URxvt.background:           black

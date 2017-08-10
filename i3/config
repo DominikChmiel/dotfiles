@@ -8,7 +8,7 @@ exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background first, then wait for chrome to start to fetch new one
 exec_always --no-startup-id "bash -c 'sleep 10; python ~/.config/i3/momentum-bg.py'"
-exec_always --no-startup-id "bash -c 'killall compton; sleep 1; compton -e 0.4 -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx --glx-no-stencil --glx-no-rebind-pixmap --vsync opengl-swc'"
+exec_always --no-startup-id "bash -c 'killall compton; sleep 1; compton -e 0.4 -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx'"
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
