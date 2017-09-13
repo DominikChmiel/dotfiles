@@ -60,7 +60,7 @@ alias subl='subl3'
 alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'
 alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/'
-
+alias plyt='mpv $(xclip -o) & disown'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
