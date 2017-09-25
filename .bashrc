@@ -55,7 +55,7 @@ alias logout='qdbus org.kde.ksmserver /KSMServer logout 0 3 3'
 alias skvm='VBoxManage startvm "Win8"'
 alias skoff='VBoxManage controlvm "Win8" poweroff'
 
-alias subl='subl3'
+#alias subl='subl3'
 #alias fuck='sudo $(history -p !-1)'
 alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'

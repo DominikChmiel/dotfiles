@@ -1,0 +1,18 @@
+#!/bin/bash
+DSTAT=$(dropbox-cli status)
+DT=$(date +'%s')
+DT=$((DT / 2))
+DT=$((DT % 4))
+if [ "$DSTAT" == "Aktualisiert" ]; then
+  echo ""
+elif [ "$DSTAT" == "Dropbox isn't running!" ]; then
+  echo ""
+else
+	case $DT in 
+		0) echo "";;
+		1) echo "";;
+		2) echo "";;
+		3) echo "";;
+		*) echo "";;
+	esac
+fi
