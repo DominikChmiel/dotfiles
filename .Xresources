@@ -84,12 +84,11 @@ Xft.autohint: 0
 URxvt.letterSpace:          0
 ! Set terminal padding
 URxvt.internalBorder:       0
-URxvt*.depth:               24
-URxvt.transparent:          true
-URxvt.shading:              40
+
+URxvt*.depth: 32
+
 URxvt.scrollBar:            false
 URxvt.foreground:           white
-URxvt.background:           black
 URxvt.secondaryScroll:      true
 URxvt.urlLauncher:          chromium
 URxvt.matcher.button:       1
@@ -98,6 +97,10 @@ URxvt.tabbed.secondaryScroll: true
 URxvt*inheritPixmap:        true
 URxvt.perl-ext-common:      default,matcher
 URxvt.iso14755:		    false
+
+URxvt.background: black
+URxvt.transparent: true
+URxvt.shading: 50
 
 *.saveLines: 8192
 *.internalBorder: 0

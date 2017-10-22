@@ -4,7 +4,8 @@ DT=$(date +'%s')
 DT=$((DT / 2))
 DT=$((DT % 4))
 if [ "$DSTAT" == "Aktualisiert" ]; then
-  echo ""
+#  echo ""
+   echo " "
 elif [ "$DSTAT" == "Dropbox isn't running!" ]; then
   echo ""
 else
@@ -16,3 +17,8 @@ else
 		*) echo "";;
 	esac
 fi
+
+
+case "$BLOCK_BUTTON" in
+    1) notify-send $DSTAT -t 2000;;
+esac

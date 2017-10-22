@@ -233,16 +233,17 @@ bar {
     workspace_buttons       yes
 
     colors {
-        background  #212121
+        background  #21212188
         statusline  #DDDDDD
         separator   #666666
         # class             border  backgr. text
-        focused_workspace   #2B83A6 #2B83A6 #FFFFFF
-        active_workspace    #212121 #212121 #FFFFFF
-        inactive_workspace  #212121 #212121 #86888C
-        urgent_workspace    #2F343A #D64E4E #FFFFFF
+        focused_workspace   #2B83A688 #2B83A688 #FFFFFF
+        active_workspace    #21212188 #21212188 #FFFFFF
+        inactive_workspace  #21212188 #21212188 #DDDDDD
+        urgent_workspace    #2F343A88 #D64E4E88 #FFFFFF
     }
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    i3bar_command i3bar -t
 }
 
 # ================= Windowing setups =================
@@ -279,6 +280,8 @@ for_window [class="^.*"]                border pixel 0
 for_window [window_role="pop-up"]       floating enable
 for_window [window_role="task_dialog"]  floating enable
 for_window [title="Preferences$"]       floating enable
+
+for_window [title="HG_Peer_OffScreenWindow"] move scratchpad
 
 # ================= Additional i3 config =================
 # set popups during fullscreen mode
