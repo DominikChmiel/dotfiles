@@ -94,7 +94,7 @@ URxvt.urlLauncher:          chromium
 URxvt.matcher.button:       1
 URxvt.font:                 xft:Hack:size=10
 URxvt.tabbed.secondaryScroll: true
-URxvt*inheritPixmap:        true
+!URxvt*inheritPixmap:        true
 URxvt.perl-ext-common:      default,matcher
 URxvt.iso14755:		    false
 

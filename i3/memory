@@ -21,11 +21,13 @@ END {
 	} else {
 		printf("%.1fG", mem_avail);
 	}
-	printf(" / ");
-	if (swap_free < 1) {
-		printf("%s%.1fG%s", "<span foreground=\"red\">", swap_free, "</span>");
-	} else {
-		printf("%.1fG", swap_free);
+	if (swap_total > 0) {
+		printf(" / ");
+		if (swap_free < 1) {
+			printf("%s%.1fG%s", "<span foreground=\"red\">", swap_free, "</span>");
+		} else {
+			printf("%.1fG", swap_free);
+		}
 	}
 	printf("\n");
 }

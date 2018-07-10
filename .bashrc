@@ -35,7 +35,7 @@ alias duf='du -sh *'
 alias fd='find . -type d -name'
 alias ff='find . -type f -name'
 alias h='history'
-alias hgrep="fc -El 0 | grep"
+alias hgrep="fc -l | grep"
 alias lgrep="ls -lFh | grep"
 alias cp='cp -iv'
 alias mv='mv -iv'
@@ -46,6 +46,8 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS}'
 alias sizeof='wget --no-config --spider'
 alias uptime='uptime -p'
 alias free='free -h'
+
+#alias ssh='TERM=xterm-color ssh'
 
 alias gitk='gitk --all & disown'
 alias mp3-dl='youtube-dl --audio-quality 1 --extract-audio --audio-format mp3'
@@ -59,8 +61,8 @@ alias skoff='VBoxManage controlvm "Win8" poweroff'
 #alias fuck='sudo $(history -p !-1)'
 alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'
-alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/'
-alias plyt='mpv $(xclip -o) & disown'
+alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/ --ignore matlab --ignore gcc5'
+alias plyt='mpv --ytdl-format="bestvideo[height<=?1080]+bestaudio/best" $(xclip -o) & disown'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -117,7 +119,7 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
-PS1='[\[\033[1;31m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
+PS1='[\[\033[1;34m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
 PS2='> '
 PS3='> '
 PS4='+ '
