@@ -4,13 +4,6 @@ color=#F3F4F5
 markup=none
 
 
-
-[dropbox]
-markup=pango
-label=
-command=bash {{projectdir}}/i3/dropbox
-interval=2
-
 [volume-pulseaudio]
 markup=pango
 full_text=

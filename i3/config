@@ -7,7 +7,7 @@
 exec --no-startup-id dunst
 exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
-# Restore background first, then wait for chrome to start to fetch new one
+# Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
 exec_always --no-startup-id "bash -c 'killall compton; sleep 1; compton -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx'"
 
@@ -23,7 +23,7 @@ exec_always --no-startup-id "bash -c 'killall compton; sleep 1; compton -r8 -l-1
 
 # ================= Plasma Integration =================
 
-# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
+# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everything)
 exec --no-startup-id wmctrl -c Plasma
 for_window [title="Arbeitsfläche — Plasma"] kill; floating enable; border none
 for_window [title="Desktop — Plasma"] kill; floating enable; border none
@@ -73,7 +73,7 @@ bindsym XF86HomePage exec chromium
 #bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -font "Helvetica Neue 15" '
 #bindsym $mod+o exec "dmenu_run -i -l 20 -fn 'Dosis-11' -w 500 -x 660 -y 200 -p launch"
 #bindsym $mod+o exec --no-startup-id rofi -show run -theme android_notification
-bindsym $mod+o exec --no-startup-id "rofi -combi-modi window,run -show combi -modi combi -theme android_notification"
+bindsym $mod+o exec --no-startup-id "rofi -combi-modi run,window -show combi -modi combi -theme android_notification"
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -251,20 +251,12 @@ bar {
 }
 
 # ================= Windowing setups =================
-for_window [class="yakuake"] floating enable;
 ## Avoid tiling popups, dropdown windows from plasma
 # for the first time, manually resize them, i3 will remember the setting for floating windows
 for_window [instance="Download"] floating enable
-for_window [class="Xfce4-notifyd"] floating enable
-for_window [class="Xfce4-notifyd"] border none
-for_window [class="YADWIN"] border none
-for_window [class="YADWIN"] floating enable
 for_window [window_role="plugin_ui"] floating enable
 for_window [title="Menu Update"] floating enable
 for_window [title="___"] floating enable
-for_window [class="^.*"] border pixel 3
-#for_window [class="Conky"] floating enable
-for_window [class="Conky"] border none
 for_window [class="Dialog"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="plasmashell"] floating enable;
@@ -278,15 +270,16 @@ for_window [class="Klipper"] floating enable; border none
 for_window [class="Plasmoidviewer"] floating enable; border none
 for_window [class="Skype" window_role="ConversationsWindow"] floating enable;
 for_window [class="SimpleScreenRecorder"] floating enable;
-for_window [class="Xilinx SDK" title="       "] floating disable;
 
-for_window [class="^.*"]                border pixel 2
 
 for_window [window_role="pop-up"]       floating enable
 for_window [window_role="task_dialog"]  floating enable
 for_window [title="Preferences$"]       floating enable
 
+# This one is for Matlab, which has some weird way of creating a non visible window
 for_window [title="HG_Peer_OffScreenWindow"] move scratchpad
+
+for_window [class="^.*"]                border pixel 2
 
 # ================= Additional i3 config =================
 # set popups during fullscreen mode
