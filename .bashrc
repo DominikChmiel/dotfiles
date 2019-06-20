@@ -61,7 +61,8 @@ alias skoff='VBoxManage controlvm "Win8" poweroff'
 #alias fuck='sudo $(history -p !-1)'
 alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'
-alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/ --ignore matlab --ignore gcc5'
+#alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/ --ignore matlab --ignore gcc5'
+alias yup='pikaur -Syua --devel --needed --noconfirm'
 alias plyt='mpv --ytdl-format="bestvideo[height<=?1080]+bestaudio/best" $(xclip -o) & disown'
 
 # enable color support of ls and also add handy aliases
@@ -106,6 +107,8 @@ shopt -s histappend  # append to history, don't overwrite it
 # Save and reload the history after each command finishes. export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 # ^ the only downside with this is [up] on the readline will go over all history not just this bash session.
 
+# Disable Ctrl + S
+stty -ixon
 
 set horizontal-scroll-mode on
 
@@ -119,7 +122,7 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
-PS1='[\[\033[1;34m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
+PS1='[\[\033[1;36m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
 PS2='> '
 PS3='> '
 PS4='+ '
@@ -149,3 +152,10 @@ esac
 if xset q &>/dev/null; then
      xrdb -merge ~/.Xresources
 fi
+
+# Add yarn to path
+PATH=$PATH:~/.yarn/bin
+# Yavide alias
+alias yavide="gvim --servername yavide -f -N -u /opt/yavide/.vimrc"
+# Yavide alias
+alias yavide="gvim --servername yavide -f -N -u /opt/yavide/.vimrc -u /opt/yavide/.vimrc"

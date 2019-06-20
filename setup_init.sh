@@ -32,6 +32,9 @@ ln -s $(pwd)/momentum-bg.py ~/.config/i3/momentum-bg.py
 
 ln -s $(pwd)/rofi ~/.config/rofi
 
+ln -s $(pwd)/termite ~/.config/termite
+ln -s $(pwd)/alacritty ~/.config/alacritty
+
 # Path in rofi theme (onlv works for rofi-git/rofi.v >= 1.4)
 sed 's|ROFI_OPTIONS=(-width -11 -location 3 -hide-scrollbar -bw 2)|ROFI_OPTIONS=(-width -11 -location 3 -hide-scrollbar -bw 2 -theme ~/.config/rofi/android_notification.rasi)|g' \
 	i3blocks-contrib/shutdown_menu/shutdown_menu > shutdown_menu.bak
