@@ -19,14 +19,14 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " keybindings for language client
-nnoremap <F4> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
-nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-nnoremap <silent> gf :call LanguageClient_textDocument_codeAction()<CR>
-nnoremap <silent> gc :call LanguageClient_textDocument_formatting()<CR>
+ " nnoremap <F4> :call LanguageClient_contextMenu()<CR>
+" " nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+" " nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+" " nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
+" " nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
+" " nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+" " nnoremap <silent> gf :call LanguageClient_textDocument_codeAction()<CR>
+" " nnoremap <silent> gc :call LanguageClient_textDocument_formatting()<CR>
 
 " fzy
 nnoremap <C-p> :FuzzyOpen<CR>
@@ -36,8 +36,8 @@ nnoremap <C-s> :FuzzyGrep<CR>
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
-"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            "\ '\<Plug>(neosnippet_expand_or_jump)' : '\<TAB>'
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+            \ '\<Plug>(neosnippet_expand_or_jump)' : '\<TAB>'
 
 
 " Expand snippet when you hit enter on an entry

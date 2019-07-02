@@ -5,7 +5,7 @@
 # ================= Startup applications =================
 
 exec --no-startup-id dunst
-#exec --no-startup-id urxvtd
+exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
@@ -79,10 +79,10 @@ bindsym $mod+o exec --no-startup-id "rofi -combi-modi run,window -show combi -mo
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty 
-bindsym $mod+t exec alacritty
-# bindsym $mod+Return exec urxvtc
-# bindsym $mod+t exec urxvtc
+# bindsym $mod+Return exec alacritty 
+# bindsym $mod+t exec alacritty
+bindsym $mod+Return exec urxvtc
+bindsym $mod+t exec urxvtc
 
 # explorer
 bindsym $mod+e exec dolphin

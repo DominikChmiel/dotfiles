@@ -102,6 +102,8 @@ URxvt.background: black
 URxvt.transparent: true
 URxvt.shading: 50
 
+
+
 *.saveLines: 8192
 *.internalBorder: 0
 *.cursorUnderline: true
