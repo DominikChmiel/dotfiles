@@ -17,6 +17,7 @@ ln -s $(pwd)/.Xresources ~/.Xresources
 ln -s $(pwd)/.dircolors ~/.dircolors
 ln -s $(pwd)/.face ~/.face
 ln -s $(pwd)/.face ~/.face.icon
+ln -s $(pwd)/.tmux.conf ~/.tmux.conf
 
 # Plasma integration of i3
 mkdir -p ~/.config/plasma-workspace/env
