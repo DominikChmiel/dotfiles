@@ -4,9 +4,6 @@
 git submodule init
 git submodule update
 
-# Path replacements
-sed 's|{{projectdir}}|'$(pwd)'|g' i3/i3blocks.conf.src > i3/i3blocks.conf
-
 
 # Creates all necessary links to link this repository into the environment
 ln -s $(pwd)/.wgetrc ~/.wgetrc
@@ -29,7 +26,7 @@ mkdir -p ~/.config/i3
 
 ln -s $(pwd)/i3/config ~/.config/i3/config
 ln -s $(pwd)/i3/i3blocks.conf ~/.config/i3/i3blocks.conf
-ln -s $(pwd)/momentum-bg.py ~/.config/i3/momentum-bg.py
+ln -s $(pwd)/i3blocks-contrib ~/.config/i3/i3blocks-contrib
 
 ln -s $(pwd)/rofi ~/.config/rofi
 
