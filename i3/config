@@ -45,15 +45,19 @@ client.urgent           #2F343A #D64E4E #FFFFFF #D64E4E
 client.placeholder      #212121 #0C0C0C #FFFFFF #212121
 client.background       #212121
 
-# ================= Keybinds =================
+# ================= Variables =================
 
 set $mod Mod4+Mod1+Shift+Ctrl
 set $meh Mod1+Shift+Ctrl
 
+set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.analog-stereo
+
+# ================= Keybinds =================
+
 # Media keys
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 1 +2% && pkill -RTMIN+1 i3blocks
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 1 -2% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +2% && pkill -RTMIN+1 i3blocks
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -2% && pkill -RTMIN+1 i3blocks
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle && pkill -RTMIN+1
 
 
@@ -62,7 +66,7 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 5 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5 # decrease screen brightness
 
 # Media player controls
-bindsym XF86AudioPlay exec playerctl play
+bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
@@ -74,7 +78,9 @@ bindsym XF86HomePage exec chromium
 #bindsym $mod+o exec "dmenu_run -i -l 20 -fn 'Dosis-11' -w 500 -x 660 -y 200 -p launch"
 #bindsym $mod+o exec --no-startup-id rofi -show run -theme android_notification
 bindsym $mod+o exec --no-startup-id "rofi -combi-modi run,window -show combi -modi combi -theme android_notification"
-bindsym --release F1 exec "xdotool windowactivate --sync $(wmctrl -l | awk '/Teams/ {print strtonum($1)}') key Ctrl+Shift+M windowactivate $(xdotool getactivewindow)"
+# bindsym --release F1 exec "xdotool windowactivate --sync $(wmctrl -l | awk '/Teams/ {print strtonum($1)}') key Ctrl+Shift+M windowactivate $(xdotool getactivewindow)"
+
+bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+10 i3blocks
 
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -83,8 +89,9 @@ floating_modifier $mod
 # start a terminal
 # set $term alacritty
 set $term urxvtc
-bindsym $mod+Space exec urxvtc
-bindsym $mod+t exec urxvtc
+bindsym $mod+space exec $term
+bindsym $mod+return exec $term
+bindsym $mod+t exec $term
 
 # explorer
 bindsym $mod+e exec dolphin
@@ -96,7 +103,7 @@ bindsym $mod+u border none
 bindsym $mod+j focus left
 bindsym $mod+k focus down
 bindsym $mod+l focus up
-bindsym $mod+odiaeresis focus right
+bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -108,13 +115,17 @@ bindsym $mod+Right focus right
 bindsym $meh+j move left
 bindsym $meh+k move down
 bindsym $meh+l move up
-bindsym $meh+odiaeresis move right
+bindsym $meh+semicolon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $meh+Left move left
 bindsym $meh+Down move down
 bindsym $meh+Up move up
 bindsym $meh+Right move right
+
+# allow moving to different outputs
+bindsym $meh+u move workspace to output right
+bindsym $meh+p move workspace to output left
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -134,10 +145,10 @@ bindsym $mod+q layout toggle split
 bindsym $meh+q kill
 
 # change focus between tiling / floating windows
-bindsym $mod+return focus mode_toggle
+bindsym $meh+return focus mode_toggle
 
 # toggle tiling / floating
-# bindsym $meh+space floating toggle
+bindsym $meh+space floating toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -164,7 +175,7 @@ set $WS4   "4:   Code "
 set $WS5   "5:   Bash "
 set $WS6   "6:   General "
 set $WS7   "7:   General "
-set $WS8   "8:   Teams "
+set $WS8   "8:   Teams "
 set $WS9   "9:   General "
 set $WS0   "10:   Mail "
 

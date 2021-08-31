@@ -30,6 +30,10 @@ function editpathvar () {
     rm $tmp
 }
 
+function xwatch () {
+    while inotifywait -e close_write $1; do ./$1 "${@:2}"; done
+}
+
 groot() {
     if git_root=$(git rev-parse --show-toplevel 2>/dev/null); then
         pushd "${git_root}"
@@ -233,6 +237,9 @@ PATH=$PATH:~/.cargo/bin
 
 # Created by `userpath` on 2020-02-28 17:49:46
 export PATH="$PATH:~/.local/bin"
-export PATH="$PATH:~/.gem/ruby/2.7.0/bin"
+export PATH="$PATH:~/.gem/ruby/3.0.0/bin"
+export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
 
 export PYTHONDONTWRITEBYTECODE=1
+
+source /usr/share/doc/mcfly/mcfly.bash
