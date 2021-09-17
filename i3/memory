@@ -17,9 +17,9 @@ END {
 	mem_avail = mem_avail/1024/1024;
 	swap_free = swap_free/1024/1024;
 	if (mem_avail < 1) {
-		printf("%s%.1fG%s", "<span foreground=\"red\">", mem_avail, "</span>");
+		printf("%s%.1f%s G", "<span foreground=\"red\" weight=\"bold\">", mem_avail, "</span>");
 	} else {
-		printf("%.1fG", mem_avail);
+		printf("%s%.1f%s G", "<span weight=\"bold\">", mem_avail, "</span>");
 	}
 	if (swap_total > 0) {
 		printf(" / ");
