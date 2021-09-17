@@ -42,7 +42,6 @@ include /usr/share/nano/tex.nanorc
 include /usr/share/nano/xml.nanorc
 
 set speller "aspell -c"
-set morespace
 set nohelp
 set tempfile
 set nowrap

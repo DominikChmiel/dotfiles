@@ -42,7 +42,18 @@ if dein#load_state('/home/r3coms/.cache/dein')
     "            \ 'build': 'bash install.sh',
     "            \ })
     call dein#add('neoclide/coc.nvim', {'merge':0, 'rev': 'release'})
+    call dein#add('LucHermitte/lh-vim-lib')
+    call dein#add('LucHermitte/lh-style')
+    call dein#add('LucHermitte/lh-tags')
+    call dein#add('LucHermitte/lh-dev')
+    call dein#add('LucHermitte/lh-brackets')
+    call dein#add('LucHermitte/searchInRuntime')
+    call dein#add('LucHermitte/mu-template')
+    call dein#add('tomtom/stakeholders_vim')
+    call dein#add('LucHermitte/alternate-lite')
+    call dein#add('LucHermitte/lh-cpp')
 
+    call dein#add('jackguo380/vim-lsp-cxx-highlight')
     " Required:
     call dein#end()
     call dein#save_state()

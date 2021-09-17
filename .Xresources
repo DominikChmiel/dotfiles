@@ -90,12 +90,12 @@ URxvt*.depth: 32
 URxvt.scrollBar:            false
 URxvt.foreground:           white
 URxvt.secondaryScroll:      true
-URxvt.urlLauncher:          chromium
+URxvt.url-launcher:          chromium
 URxvt.matcher.button:       1
 URxvt.font:                 xft:Hack:size=10
 URxvt.tabbed.secondaryScroll: true
 !URxvt*inheritPixmap:        true
-URxvt.perl-ext-common:      default,matcher
+URxvt.perl-ext:      default,matcher
 URxvt.iso14755:		    false
 
 URxvt.background: black

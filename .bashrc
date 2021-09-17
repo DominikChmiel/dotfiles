@@ -10,6 +10,31 @@ if [ -f ./.private_funcs.sh ]; then
     source ./.private_funcs.sh
 fi
 
+mkcd () {
+    mkdir -p $1
+    cd $1
+}
+
+function printpathvar () {
+    eval value=\"\$$1\"
+    echo "$value" | tr ':' '\n'
+    unset value
+}
+
+function editpathvar () {
+    local tmp=`mktemp`
+    echo "Outputting to $tmp..."
+    printpathvar $1 > $tmp
+    $EDITOR $tmp
+    export $1=`cat $tmp | tr '\n' ':'`
+    rm $tmp
+}
+
+groot() {
+    if git_root=$(git rev-parse --show-toplevel 2>/dev/null); then
+        pushd "${git_root}"
+    fi
+}
 
 #Aliases
 # easy of navigation
@@ -19,9 +44,9 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ~='cd ~'
 alias -- -='cd -'
-
 # easy report
-alias ls='ls --color=auto'
+alias ip='ip -c=auto'
+alias ls='ls -lAGh1vX --group-directories-first --color=auto'
 alias l='ls -lFh'
 alias ll='ls -la'
 alias la='ls -lAFh'
@@ -71,7 +96,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
- 
+
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
@@ -97,7 +122,7 @@ shopt -s cmdhist;
 shopt -s checkwinsize;
 
 # Gotta tune that bash_history.
-export HISTTIMEFORMAT='%F %T ' 
+export HISTTIMEFORMAT='%F %T '
 # Keep history up to date, across sessions, and in realtime.
 export HISTCONTROL=ignoredups:erasedups         # no duplicate entries
 export HISTSIZE=10000                           # big history (default is 1000)
@@ -111,6 +136,11 @@ shopt -s histappend  # append to history, don't overwrite it
 stty -ixon
 
 set horizontal-scroll-mode on
+
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+[ -r /usr/share/doc/pkgfile/command-not-found.bash   ] && . /usr/share/doc/pkgfile/command-not-found.bash
+[ -r /usr/share/git/completion/git-completion.bash  ] && . /usr/share/git/completion/git-completion.bash
+[ -r /usr/share/git/completion/git-prompt.sh  ] && . /usr/share/git/completion/git-prompt.sh
 
 # Highlighting inside manpages and elsewhere.
 # from paulirish.
@@ -127,10 +157,13 @@ PS2='> '
 PS3='> '
 PS4='+ '
 
+PS1='[\[\033[1;36m\]\u\[\033[0m\] @ \[\033[1;30m\]\h \[\033[0m\]\033[1m\]\w\[\033[0;32m\]$(__git_ps1 " | \033[1m\]%s ")\[\033[0m\]]\n\[\033[0;0m\]└─\[\033[0m\033[1;36m\] \$ ▶\[\033[0m\] '
+
+
 PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 export PKG_CONFIG_PATH
 
-export EDITOR=nano
+export EDITOR=nvim
 
 
 case ${TERM} in
@@ -143,10 +176,49 @@ case ${TERM} in
     ;;
 esac
 
+function ga_code_search() {
+    # alias todo='ga_code_search "TODO\(`whoami`\)"'
+    SCREEN_WIDTH=`stty size | awk '{print $2}'`
+    SCREEN_WIDTH=$((SCREEN_WIDTH-4))
+    # Given a spooky name so you can alias to whatever you want.
+    # (cs for codesearch)
+    # AG is WAY faster but requires a binary
+    # (try brew install the_silver_searcher)
+    AG_SEARCH='ag "$1" | grep -v build | sort -k1 | cat -n | cut -c 1-$SCREEN_WIDTH'
 
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
-[ -r /usr/share/doc/pkgfile/command-not-found.bash   ] && . /usr/share/doc/pkgfile/command-not-found.bash
-[ -r /usr/share/git/completion/git-completion.bash  ] && . /usr/share/git/completion/git-completion.bash
+    # egrep is installed everywhere and is the default.
+    GREP_SEARCH='egrep -nR "$1" * | grep -v build | sort -k1 | cat -n | cut -c 1-$SCREEN_WIDTH'
+
+    SEARCH=$AG_SEARCH
+
+    if [ $# -eq 0 ]; then
+
+        echo "Usage: ga_code_search <search> <index_to_edit>"
+        echo ""
+        echo "Examples:"
+        echo "    ga_code_search TODO"
+        echo "    ga_code_search TODO 1"
+        echo "    ga_code_search \"TODO\\(graham\\)\""
+        echo "    ga_code_search \"TODO\\(graham\\)\" 4"
+        echo ""
+        return
+    fi
+
+    if [ $# -eq 1 ]; then
+        # There are no command line argumnets.
+        eval $SEARCH
+    else
+        # arg one should be a line from the output of above.
+        LINE="$SEARCH | sed '$2q;d' | awk -F':' '{print +\$2 \" \" \$1}' | awk -F' ' '{print \$1 \" \" \$3}'"
+        # Modify with your editor here.
+        subl \+`eval $LINE`
+    fi
+}
+
+alias todo='ga_code_search "TODO\(`whoami`\)"'
+alias cs='ga_code_search'
+
+alias low_cpu_run='systemd-run -p CPUQuota="25%" -p AllowedCPUs=0 --scope --uid=$USER --gid=$(id -g $USER) --'
 
 # Load ressources
 if xset q &>/dev/null; then
@@ -155,7 +227,12 @@ fi
 
 # Add yarn to path
 PATH=$PATH:~/.yarn/bin
-# Yavide alias
-alias yavide="gvim --servername yavide -f -N -u /opt/yavide/.vimrc"
-# Yavide alias
-alias yavide="gvim --servername yavide -f -N -u /opt/yavide/.vimrc -u /opt/yavide/.vimrc"
+
+# Add rust binaries to path
+PATH=$PATH:~/.cargo/bin
+
+# Created by `userpath` on 2020-02-28 17:49:46
+export PATH="$PATH:~/.local/bin"
+export PATH="$PATH:~/.gem/ruby/2.7.0/bin"
+
+export PYTHONDONTWRITEBYTECODE=1

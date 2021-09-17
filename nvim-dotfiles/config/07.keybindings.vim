@@ -2,10 +2,10 @@
 nnoremap ; :
 
 " split pane navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
 
 " Delete trailing whitespace with F5
 :nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
@@ -41,7 +41,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 
 " Expand snippet when you hit enter on an entry
-inoremap <silent> <expr> <CR> ncm2_neosnippet#expand_or("\<CR>", 'n')
+" inoremap <silent> <expr> <CR> ncm2_neosnippet#expand_or("\<CR>", 'n')
 inoremap <c-c> <ESC>
 
 " For conceal markers.
