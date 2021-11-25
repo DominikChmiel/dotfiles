@@ -31,7 +31,7 @@ ln -s $(pwd)/i3blocks-contrib ~/.config/i3/i3blocks-contrib
 ln -s $(pwd)/rofi ~/.config/rofi
 
 ln -s $(pwd)/termite ~/.config/termite
-ln -s $(pwd)/alacritty ~/.config/alacritty
+ln -s $(pwd)/powerline ~/.config/powerline
 
 # Path in rofi theme (onlv works for rofi-git/rofi.v >= 1.4)
 sed 's|ROFI_OPTIONS=(-width -11 -location 3 -hide-scrollbar -bw 2)|ROFI_OPTIONS=(-width -11 -location 3 -hide-scrollbar -bw 2 -theme ~/.config/rofi/android_notification.rasi)|g' \

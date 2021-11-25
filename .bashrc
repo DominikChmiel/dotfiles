@@ -34,6 +34,11 @@ function xwatch () {
     while inotifywait -e close_write $1; do ./$1 "${@:2}"; done
 }
 
+
+function xdirwatch () {
+    while inotifywait -r -e close_write .; do $@; done
+}
+
 groot() {
     if git_root=$(git rev-parse --show-toplevel 2>/dev/null); then
         pushd "${git_root}"
@@ -156,29 +161,27 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
-PS1='[\[\033[1;36m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
-PS2='> '
-PS3='> '
-PS4='+ '
-
-PS1='[\[\033[1;36m\]\u\[\033[0m\] @ \[\033[1;30m\]\h \[\033[0m\]\033[1m\]\w\[\033[0;32m\]$(__git_ps1 " | \033[1m\]%s ")\[\033[0m\]]\n\[\033[0;0m\]└─\[\033[0m\033[1;36m\] \$ ▶\[\033[0m\] '
+# PS1='[\[\033[1;36m\]\u\[\033[0m\]@\[\033[1;30m\]\h\[\033[0m\] \W]\$ '
+# PS1='[\[\033[1;36m\]\u\[\033[0m\] @ \[\033[1;30m\]\h \[\033[0m\]\033[1m\]\w\[\033[0;32m\]$(__git_ps1 " | \033[1m\]%s ")\[\033[0m\]]\n\[\033[0;0m\]└─\[\033[0m\033[1;36m\] \$ ▶\[\033[0m\] '
 
 
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
-export PKG_CONFIG_PATH
+# case ${TERM} in
+#   xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+#     PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+
+#     ;;
+#   screen*)
+#     PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+#     ;;
+# esac
+
+prompt() {
+    PS1="$(powerline-rs --theme=$HOME/.config/powerline/gruvbox.theme --shell bash $?)"
+}
+PROMPT_COMMAND=prompt
+
 
 export EDITOR=nvim
-
-
-case ${TERM} in
-  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-
-    ;;
-  screen*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-esac
 
 function ga_code_search() {
     # alias todo='ga_code_search "TODO\(`whoami`\)"'
@@ -213,9 +216,9 @@ function ga_code_search() {
         eval $SEARCH
     else
         # arg one should be a line from the output of above.
-        LINE="$SEARCH | sed '$2q;d' | awk -F':' '{print +\$2 \" \" \$1}' | awk -F' ' '{print \$1 \" \" \$3}'"
+        LINE="$SEARCH | sed '$2q;d' | awk -F':' '{print +\$2 \" \" \$1}' | awk -F' ' '{print \$3\":\"\$1}'"
         # Modify with your editor here.
-        subl \+`eval $LINE`
+        subl `eval $LINE`
     fi
 }
 
@@ -223,11 +226,14 @@ alias todo='ga_code_search "TODO\(`whoami`\)"'
 alias cs='ga_code_search'
 
 alias low_cpu_run='systemd-run -p CPUQuota="25%" -p AllowedCPUs=0 --scope --uid=$USER --gid=$(id -g $USER) --'
+alias low_ram_run='systemd-run -p MemoryLimit=8000M" -p AllowedCPUs=0 --scope --uid=$USER --gid=$(id -g $USER) --'
 
 # Load ressources
 if xset q &>/dev/null; then
      xrdb -merge ~/.Xresources
 fi
+
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 
 # Add yarn to path
 PATH=$PATH:~/.yarn/bin
@@ -235,11 +241,17 @@ PATH=$PATH:~/.yarn/bin
 # Add rust binaries to path
 PATH=$PATH:~/.cargo/bin
 
+# Add go binaries to path
+PATH=$PATH:~/go/bin
+
 # Created by `userpath` on 2020-02-28 17:49:46
 export PATH="$PATH:~/.local/bin"
 export PATH="$PATH:~/.gem/ruby/3.0.0/bin"
 export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
 
 export PYTHONDONTWRITEBYTECODE=1
+
+export MCFLY_FUZZY=2
+export MCFLY_RESULTS=30
 
 source /usr/share/doc/mcfly/mcfly.bash
