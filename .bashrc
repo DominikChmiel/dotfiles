@@ -80,6 +80,7 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS}'
 alias sizeof='wget --no-config --spider'
 alias uptime='uptime -p'
 alias free='free -h'
+alias g='git'
 
 #alias ssh='TERM=xterm-color ssh'
 
@@ -130,14 +131,14 @@ shopt -s cmdhist;
 # update the values of lines and columns.
 shopt -s checkwinsize;
 
-# Gotta tune that bash_history.
-export HISTTIMEFORMAT='%F %T '
-# Keep history up to date, across sessions, and in realtime.
-export HISTCONTROL=ignoredups:erasedups         # no duplicate entries
-export HISTSIZE=10000                           # big history (default is 1000)
-export HISTFILESIZE=$HISTSIZE                   # big history
+# # Gotta tune that bash_history.
+# export HISTTIMEFORMAT='%F %T '
+# # Keep history up to date, across sessions, and in realtime.
+# export HISTCONTROL=ignoredups:erasedups         # no duplicate entries
+# export HISTSIZE=10000                           # big history (default is 1000)
+# export HISTFILESIZE=$HISTSIZE                   # big history
 
-shopt -s histappend  # append to history, don't overwrite it
+# shopt -s histappend  # append to history, don't overwrite it
 # Save and reload the history after each command finishes. export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 # ^ the only downside with this is [up] on the readline will go over all history not just this bash session.
 
@@ -251,7 +252,15 @@ export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
 
 export PYTHONDONTWRITEBYTECODE=1
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 export MCFLY_FUZZY=2
 export MCFLY_RESULTS=30
 
 source /usr/share/doc/mcfly/mcfly.bash
+
+export DOTNET_CLI_UI_LANGUAGE=en
+
+eval "$(direnv hook bash)"
+
+eval $(glab completion -s bash)
