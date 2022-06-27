@@ -81,7 +81,7 @@ Xft.autohint: 0
 *.color15:      #fdf6e3
 
 
-URxvt.letterSpace:          0
+URxvt.letterSpace:          -1
 ! Set terminal padding
 URxvt.internalBorder:       0
 
@@ -97,12 +97,11 @@ URxvt.tabbed.secondaryScroll: true
 !URxvt*inheritPixmap:        true
 URxvt.perl-ext:      default,matcher
 URxvt.iso14755:		    false
+URxvt.iso14755_52: false
 
 URxvt.background: black
 URxvt.transparent: true
 URxvt.shading: 50
-
-
 
 *.saveLines: 8192
 *.internalBorder: 0
