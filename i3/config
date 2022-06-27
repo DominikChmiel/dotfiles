@@ -77,7 +77,7 @@ bindsym XF86HomePage exec chromium
 #bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu='rofi -i -dmenu -font "Helvetica Neue 15" '
 #bindsym $mod+o exec "dmenu_run -i -l 20 -fn 'Dosis-11' -w 500 -x 660 -y 200 -p launch"
 #bindsym $mod+o exec --no-startup-id rofi -show run -theme android_notification
-bindsym $mod+o exec --no-startup-id "rofi -combi-modi run,window -show combi -modi combi -theme android_notification"
+bindsym $mod+o exec --no-startup-id "rofi -combi-modi run,window -show combi -modi combi -theme android_notification -sort -sorting-method fzf -matching fuzzy"
 # bindsym --release F1 exec "xdotool windowactivate --sync $(wmctrl -l | awk '/Teams/ {print strtonum($1)}') key Ctrl+Shift+M windowactivate $(xdotool getactivewindow)"
 
 bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+10 i3blocks
@@ -87,7 +87,6 @@ bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+10 i3block
 floating_modifier $mod
 
 # start a terminal
-# set $term alacritty
 set $term urxvtc
 bindsym $mod+space exec $term
 bindsym $mod+return exec $term
@@ -165,6 +164,8 @@ bindsym $mod+r restart
 
 #bindsym $mod+Shift+x            exec --no-startup-id i3lock-fancy -f Source-Sans-ProX
 
+bindsym Ctrl+space   exec dunstctl close
+
 # ================= Workspace setups =================
 
 # customize workspace name
@@ -183,10 +184,10 @@ workspace $WS1 output DP-4
 workspace $WS2 output DP-2
 workspace $WS3 output DP-4
 workspace $WS4 output DP-2
-workspace $WS5 output DVI-D-0
+workspace $WS5 output HDMI-0
 #workspace $WS6 output eDP1
 #workspace $WS7 output eDP1
-workspace $WS8 output DVI-D-0
+workspace $WS8 output HDMI-0
 #workspace $WS9 output eDP1
 workspace $WS0 output DP-2
 
@@ -245,8 +246,8 @@ bindsym $meh+r mode "  "
 # ================= Bar setups =================
 
 bar {
-#	tray_output primary
-	font pango:Awesome, pango:Arial 11
+#   tray_output primary
+    font pango:Awesome, pango:Arial 11
     #font pango:Awesome 11
     position top
 
@@ -264,6 +265,31 @@ bar {
     }
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     i3bar_command i3bar -t
+    output HDMI-0
+}
+
+bar {
+#   tray_output primary
+    font pango:Awesome, pango:Arial 11
+    #font pango:Awesome 11
+    position top
+
+    workspace_buttons       yes
+
+    colors {
+        background  #21212188
+        statusline  #DDDDDD
+        separator   #666666
+        # class             border  backgr. text
+        focused_workspace   #2B83A688 #2B83A688 #FFFFFF
+        active_workspace    #21212188 #21212188 #FFFFFF
+        inactive_workspace  #21212188 #21212188 #DDDDDD
+        urgent_workspace    #2F343A88 #D64E4E88 #FFFFFF
+    }
+    status_command i3blocks -c ~/.config/i3/i3blocks-nomedia.conf
+    i3bar_command i3bar -t
+    output DP-2
+    output DP-4
 }
 
 # ================= Windowing setups =================
@@ -295,6 +321,7 @@ for_window [title="Microsoft Teams Notification"] floating enable
 for_window [title="Microsoft Teams-Benachrichtigung"] floating enable
 
 for_window [class="Microsoft Teams" window_role="browser-window"] move container to workspace $WS8
+for_window [class="firefox"] move container to workspace $WS7
 
 # This one is for Matlab, which has some weird way of creating a non visible window
 for_window [title="HG_Peer_OffScreenWindow"] move scratchpad
