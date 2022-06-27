@@ -15,17 +15,21 @@ ln -s $(pwd)/.dircolors ~/.dircolors
 ln -s $(pwd)/.face ~/.face
 ln -s $(pwd)/.face ~/.face.icon
 ln -s $(pwd)/.tmux.conf ~/.tmux.conf
+ln -s $(pwd)/.profile ~/.profile
 
-# Plasma integration of i3
-mkdir -p ~/.config/plasma-workspace/env
-
-ln -s $(pwd)/wm.sh ~/.config/plasma-workspace/env
+# Plasma integration of i3 using systemd boot
+mkdir -p ~/.config/systemd/user/
+ln -s $(pwd)/i3.service ~/.config/systemd/user/
+systemctl --user --daemon-reload
+systemctl --user add-wants plasma-workspace@x11.target i3.service
+systemctl --user mask plasma-kwin_x11.service
 
 # Configuration of i3
 mkdir -p ~/.config/i3
 
 ln -s $(pwd)/i3/config ~/.config/i3/config
 ln -s $(pwd)/i3/i3blocks.conf ~/.config/i3/i3blocks.conf
+ln -s $(pwd)/i3/i3blocks-nomedia.conf ~/.config/i3/i3blocks-nomedia.conf
 ln -s $(pwd)/i3blocks-contrib ~/.config/i3/i3blocks-contrib
 
 ln -s $(pwd)/rofi ~/.config/rofi

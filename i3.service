@@ -1,0 +1,11 @@
+[Unit]
+Description=KDE Window Manager
+After=plasma-kcminit.service
+PartOf=graphical-session.target
+
+[Service]
+ExecStart=/usr/bin/i3
+BusName=org.kde.KWin
+Slice=session.slice
+Restart=on-failure
+Type=simple
