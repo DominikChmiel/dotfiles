@@ -9,7 +9,7 @@ exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
-#exec_always --no-startup-id "bash -c 'killall compton; sleep 1; compton -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx'"
+#exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx'"
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
@@ -25,10 +25,9 @@ exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama
 
 # Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everything)
 exec --no-startup-id wmctrl -c Plasma
-for_window [title="Arbeitsfläche — Plasma"] kill; floating enable; border none
+for_window [title="Arbeitsfläche.*"] kill; floating enable; border none
 for_window [title="Desktop — Plasma"] kill; floating enable; border none
 for_window [class="ksplashqml"] kill; floating enable; border none
-
 
 # ================= Fonts/Colors =================
 
@@ -50,7 +49,7 @@ client.background       #212121
 set $mod Mod4+Mod1+Shift+Ctrl
 set $meh Mod1+Shift+Ctrl
 
-set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.analog-stereo
+set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__scarlett2i4_mono_in_USB_0_0__source
 
 # ================= Keybinds =================
 
@@ -181,15 +180,15 @@ set $WS9   "9:   General "
 set $WS0   "10:   Mail "
 
 workspace $WS1 output DP-4
-workspace $WS2 output DP-2
+workspace $WS2 output DVI-D-0
 workspace $WS3 output DP-4
-workspace $WS4 output DP-2
-workspace $WS5 output HDMI-0
+workspace $WS4 output DVI-D-0
+workspace $WS5 output DP-2
 #workspace $WS6 output eDP1
 #workspace $WS7 output eDP1
-workspace $WS8 output HDMI-0
+workspace $WS8 output DP-2
 #workspace $WS9 output eDP1
-workspace $WS0 output DP-2
+workspace $WS0 output DP-4
 
 # switch to workspace
 bindsym $mod+1 workspace $WS1
@@ -265,7 +264,7 @@ bar {
     }
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     i3bar_command i3bar -t
-    output HDMI-0
+    output DP-0
 }
 
 bar {
@@ -288,8 +287,9 @@ bar {
     }
     status_command i3blocks -c ~/.config/i3/i3blocks-nomedia.conf
     i3bar_command i3bar -t
-    output DP-2
     output DP-4
+    output HDMI-0
+    output DVI-D-0
 }
 
 # ================= Windowing setups =================

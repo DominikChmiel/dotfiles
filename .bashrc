@@ -89,8 +89,7 @@ alias mp3-dl='youtube-dl --audio-quality 1 --extract-audio --audio-format mp3'
 alias timer='echo "Timer started. Stop with Ctrl-D." && date "+%a, %d %b %H:%M:%S" && time cat && date "+%a, %d %b %H:%M:%S"'
 alias logout='qdbus org.kde.ksmserver /KSMServer logout 0 3 3'
 
-alias skvm='VBoxManage startvm "Win8"'
-alias skoff='VBoxManage controlvm "Win8" poweroff'
+alias nano="nano --smarthome --autoindent --linenumbers --mouse --historylog --trimblanks --nohelp" 
 
 #alias subl='subl3'
 #alias fuck='sudo $(history -p !-1)'
@@ -264,3 +263,4 @@ export DOTNET_CLI_UI_LANGUAGE=en
 eval "$(direnv hook bash)"
 
 eval $(glab completion -s bash)
+
