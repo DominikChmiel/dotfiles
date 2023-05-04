@@ -9,7 +9,7 @@ exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
-#exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8  -b  -D1 -I1 --backend glx'"
+exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8 -i1 -b --no-fading-openclose -D1 -I1 --backend glx'"
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
@@ -19,7 +19,6 @@ exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama
 #exec --no-startup-id pasystray
 #exec --no-startup-id xautolock -time 10 -locker "i3lock-fancy -f Source-Sans-Pro"
 #exec --no-startup-id pasystray
-
 
 # ================= Plasma Integration =================
 
@@ -180,13 +179,13 @@ set $WS9   "9:   General "
 set $WS0   "10:   Mail "
 
 workspace $WS1 output DP-4
-workspace $WS2 output DVI-D-0
+workspace $WS2 output DP-2
 workspace $WS3 output DP-4
-workspace $WS4 output DVI-D-0
-workspace $WS5 output DP-2
-#workspace $WS6 output eDP1
+workspace $WS4 output DP-2
+workspace $WS5 output DP-0
+workspace $WS6 output DP-2
 #workspace $WS7 output eDP1
-workspace $WS8 output DP-2
+workspace $WS8 output DP-0
 #workspace $WS9 output eDP1
 workspace $WS0 output DP-4
 
@@ -245,7 +244,7 @@ bindsym $meh+r mode "  "
 # ================= Bar setups =================
 
 bar {
-#   tray_output primary
+    tray_output DP-4
     font pango:Awesome, pango:Arial 11
     #font pango:Awesome 11
     position top
@@ -268,6 +267,7 @@ bar {
 }
 
 bar {
+    tray_output DP-4
 #   tray_output primary
     font pango:Awesome, pango:Arial 11
     #font pango:Awesome 11
@@ -288,8 +288,7 @@ bar {
     status_command i3blocks -c ~/.config/i3/i3blocks-nomedia.conf
     i3bar_command i3bar -t
     output DP-4
-    output HDMI-0
-    output DVI-D-0
+    output DP-2
 }
 
 # ================= Windowing setups =================
