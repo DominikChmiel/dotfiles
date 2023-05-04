@@ -35,10 +35,11 @@ async def single_display_update(
     else:
         busparams = ["-d", dinfo.id]
     get_proc = await asyncio.create_subprocess_exec(
-        *["ddcutil", "--sleep-multiplier=0.5", "getvcp", "10", *busparams],
+        *["ddcutil", "getvcp", "10", *busparams],
         stdout=asyncio.subprocess.PIPE,
     )
     c_brightness_str_stdout, _ = await get_proc.communicate()
+    print(c_brightness_str_stdout)
     c_brightness_str = (
         c_brightness_str_stdout.decode()
         .strip()
@@ -65,7 +66,7 @@ async def single_display_update(
 
     print(f"Setting {dinfo.id} = {new_val}")
     set_proc = await asyncio.create_subprocess_exec(
-        *["ddcutil", "--sleep-multiplier=0.5", "setvcp", "10", str(new_val), *busparams]
+        *["ddcutil", "setvcp", "10", str(new_val), *busparams]
     )
     await get_proc.communicate()
     return key, dinfo
@@ -73,6 +74,7 @@ async def single_display_update(
 
 async def main() -> None:
     displays: dict[str, DisplayInfo] = {}
+    loaded_displays: dict[str, DisplayInfo] = {}
 
     if os.path.exists(STATE_FILE):
         with open(STATE_FILE, "r") as inf:
@@ -80,10 +82,10 @@ async def main() -> None:
             for key, dinfo in dicted_data.items():
                 if "bus" not in dinfo:
                     dinfo["bus"] = None
-                displays[key] = DisplayInfo(**dinfo)
+                loaded_displays[key] = DisplayInfo(**dinfo)
 
     print("Loaded:")
-    print(displays)
+    print(loaded_displays)
 
     current_display = None
     current_bus = None
@@ -100,11 +102,12 @@ async def main() -> None:
             print(f"Have current display {current_display}")
         if "Model:" in line and current_display:
             mname = line.split("Model:")[1].strip()
-            if mname not in displays:
+            if mname not in loaded_displays:
                 displays[mname] = DisplayInfo(
                     name=mname, id=current_display, bus=current_bus
                 )
             else:
+                displays[mname] = loaded_displays[mname]
                 displays[mname].bus = current_bus
             current_display = None
             current_bus = None
