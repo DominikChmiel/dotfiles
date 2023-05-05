@@ -16,6 +16,7 @@ ln -s $(pwd)/.face ~/.face
 ln -s $(pwd)/.face ~/.face.icon
 ln -s $(pwd)/.tmux.conf ~/.tmux.conf
 ln -s $(pwd)/.profile ~/.profile
+ln -s $(pwd)/picom.conf ~/.config/picom.conf
 
 # Plasma integration of i3 using systemd boot
 mkdir -p ~/.config/systemd/user/

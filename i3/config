@@ -9,7 +9,7 @@ exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
-exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8 -i1 -b --no-fading-openclose -D1 -I1 --backend glx'"
+exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8 -b --backend glx --config ~/.config/picom.conf'"
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
