@@ -65,10 +65,15 @@ async def single_display_update(
         new_val = dinfo.lowest_set_value
 
     print(f"Setting {dinfo.id} = {new_val}")
-    set_proc = await asyncio.create_subprocess_exec(
-        *["ddcutil", "setvcp", "10", str(new_val), *busparams]
-    )
-    await get_proc.communicate()
+    while True:
+        set_proc = await asyncio.create_subprocess_exec(
+            *["ddcutil", "setvcp", "10", str(new_val), *busparams]
+        )
+        await set_proc.communicate()
+        if set_proc.returncode == 0:
+            break
+        await asyncio.sleep(0.5)
+        print(f"Retrying due to failure on {dinfo.id} | {set_proc.returncode}")
     return key, dinfo
 
 
