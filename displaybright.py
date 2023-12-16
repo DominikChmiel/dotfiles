@@ -188,6 +188,7 @@ async def run_polling_loop():
                 print("Hour since last readout. reading screens")
                 for d in displays:
                     d.read_brightness()
+                last_update = time.time()
             for d in displays:
                 d.update()
     finally:
