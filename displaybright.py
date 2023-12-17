@@ -11,6 +11,12 @@ from dataclasses import dataclass, asdict
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
 
+def on_disconnect(client, userdata, rc):
+    print("Device disconnected with result code: " + str(rc))
+
+def on_log(client, userdata, level, buf):
+    print(f"SYSTEM: {buf}")
+
 subs: dict[str, "SingleScreen"] = {}
 
 def on_message(client, userdata, msg):  # The callback for when a PUBLISH 
@@ -21,13 +27,11 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH
 
 client = mqtt.Client()
 client.on_connect = on_connect
+client.on_disconnect = on_disconnect
 client.on_message = on_message
+client.on_log = on_log
 client.username_pw_set(os.environ["MQTT_USER"], os.environ["MQTT_PASSWORD"])
 client.connect(os.environ["MQTT_SERVER"], 1883, 60)
-# for i in range(3):
-#     client.publish('a/b', payload=i, qos=0, retain=False)
-#     print(f"send {i} to a/b")
-#     time.sleep(1)
 
 async def get_device_mac() -> str:
     get_proc = await asyncio.create_subprocess_shell(
