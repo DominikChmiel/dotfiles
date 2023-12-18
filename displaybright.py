@@ -30,8 +30,10 @@ client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
 client.on_log = on_log
+client.will_set('displays/status', 'offline', 0, True)
 client.username_pw_set(os.environ["MQTT_USER"], os.environ["MQTT_PASSWORD"])
 client.connect(os.environ["MQTT_SERVER"], 1883, 60)
+client.publish(f"displays/status", "online")
 
 async def get_device_mac() -> str:
     get_proc = await asyncio.create_subprocess_shell(
@@ -102,12 +104,12 @@ class SingleScreen():
                 "sa": "work_room",
                 "mf": "MainBoot",
             },
-            "~": f"displays/{self.number}",
+            "~": f"displays",
             "name": f"Display {self.name} brightness",
             "uniq_id": f"displays_{self.number}_brightness",
             "avty_t": "~/status",
-            "stat_t": "~/brightness",
-            "cmd_t": "~/brightness/set",
+            "stat_t": f"~/{self.number}/brightness",
+            "cmd_t": f"~/{self.number}/brightness/set",
             "unit_of_meas": "%",
             "min": 0,
             "max": 100,
@@ -122,7 +124,6 @@ class SingleScreen():
         self.update()
 
     def update(self):
-        client.publish(f"displays/{self.number}/status", "online")
         client.publish(f"displays/{self.number}/brightness", self.last_brightness)
 
     def connect_mqtt(self):
