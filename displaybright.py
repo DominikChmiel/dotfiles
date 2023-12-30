@@ -10,12 +10,10 @@ from dataclasses import dataclass, asdict
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
+    client.publish(f"displays/status", "online")
 
 def on_disconnect(client, userdata, rc):
     print("Device disconnected with result code: " + str(rc))
-
-def on_log(client, userdata, level, buf):
-    print(f"SYSTEM: {buf}")
 
 subs: dict[str, "SingleScreen"] = {}
 
@@ -29,11 +27,9 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
-client.on_log = on_log
 client.will_set('displays/status', 'offline', 0, True)
 client.username_pw_set(os.environ["MQTT_USER"], os.environ["MQTT_PASSWORD"])
 client.connect(os.environ["MQTT_SERVER"], 1883, 60)
-client.publish(f"displays/status", "online")
 
 async def get_device_mac() -> str:
     get_proc = await asyncio.create_subprocess_shell(
@@ -157,6 +153,7 @@ class SingleScreen():
         disp.connect_mqtt()
         return disp
 
+
 async def init_displays():
     detect_proc = await asyncio.create_subprocess_exec(
         *["sudo", "ddcutil", "detect", "--async", "--sleep-multiplier=0.5"],
@@ -173,7 +170,7 @@ async def init_displays():
             print(spec)
             print("=======")
             tasks.append(SingleScreen.from_output(spec))
-            
+
     all_displays = await asyncio.gather(*tasks)
 
     pprint.pprint(all_displays)
@@ -182,6 +179,7 @@ async def init_displays():
 
     return all_displays
 
+
 async def run_polling_loop():
     displays = await init_displays()
     client.loop_start()
@@ -189,7 +187,7 @@ async def run_polling_loop():
         last_update = time.time()
         while True:
             await asyncio.sleep(5)
-            if time.time() - last_update > 60*60:
+            if time.time() - last_update > 60 * 60:
                 print("Hour since last readout. reading screens")
                 for d in displays:
                     d.read_brightness()
