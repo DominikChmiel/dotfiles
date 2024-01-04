@@ -189,8 +189,8 @@ async def run_polling_loop():
             await asyncio.sleep(5)
             if time.time() - last_update > 60 * 60:
                 print("Hour since last readout. reading screens")
-                for d in displays:
-                    d.read_brightness()
+                t_tasks = [d.read_brightness() for d in displays]
+                await asyncio.gather(*t_tasks)
                 last_update = time.time()
             for d in displays:
                 d.update()
