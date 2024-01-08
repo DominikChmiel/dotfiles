@@ -12,6 +12,10 @@ def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
     client.publish(f"displays/status", "online")
 
+    if client.displays:
+        for d in client.displays:
+            d.connect_mqtt()
+
 def on_disconnect(client, userdata, rc):
     print("Device disconnected with result code: " + str(rc))
 
@@ -24,6 +28,9 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH
         subs[msg.topic].on_mqtt(msg.payload)
 
 client = mqtt.Client()
+
+client.displays = []
+
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
@@ -181,7 +188,7 @@ async def init_displays():
 
 
 async def run_polling_loop():
-    displays = await init_displays()
+    client.displays = await init_displays()
     client.loop_start()
     try:
         last_update = time.time()
@@ -189,13 +196,13 @@ async def run_polling_loop():
             await asyncio.sleep(5)
             if time.time() - last_update > 60 * 60:
                 print("Hour since last readout. reading screens")
-                t_tasks = [d.read_brightness() for d in displays]
+                t_tasks = [d.read_brightness() for d in client.displays]
                 await asyncio.gather(*t_tasks)
                 last_update = time.time()
-            for d in displays:
+            for d in client.displays:
                 d.update()
     finally:
-        for d in displays:
+        for d in client.displays:
             d.set_offline()
         client.loop_stop()
 
