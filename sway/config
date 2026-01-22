@@ -39,6 +39,7 @@ output DP-1 {
     transform 270
     scale 1.0
     max_render_time 16  # 16ms for 60Hz
+    bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
 
 # Center monitor - 4K with scaling
@@ -47,6 +48,7 @@ output DP-2 {
     pos 2637 984
     scale 1.5
     max_render_time 8   # 8ms for 120Hz - reduces input lag
+    bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
 
 # Right monitor
@@ -55,12 +57,8 @@ output HDMI-A-1 {
     pos 5196 984
     scale 1.0
     max_render_time 8   # 8ms for 120Hz - reduces input lag
+    bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
-
-# Set wallpapers (optional - uncomment and set paths):
-# output DP-1 bg /path/to/wallpaper.jpg fill
-# output DP-2 bg /path/to/wallpaper.jpg fill
-# output HDMI-A-1 bg /path/to/wallpaper.jpg fill
 
 # ================= Fonts/Colors =================
 
