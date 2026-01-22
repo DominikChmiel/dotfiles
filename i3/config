@@ -9,16 +9,16 @@ exec --no-startup-id urxvtd
 exec --no-startup-id nm-applet
 # Restore background
 exec_always --no-startup-id "bash -c 'sleep 10; nitrogen --force-setter=xinerama --restore'"
-exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8 -b --backend glx --config ~/.config/picom.conf'"
+#exec_always --no-startup-id "bash -c 'killall picom; sleep 1; picom -r8 -l-12 -t-8 -b --backend glx --config ~/.config/picom.conf'"
+
+# exec --no-startup-id stalonetray --dockapp --geometry 1x1+0+0 --grow-gravity NE --icon-gravity NE --max-geometry 10x1 --icon-size 22
 
 # Disabled/not used for the current setup
 #exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon-localeexec
 #exec --no-startup-id dconf write /org/gnome/settings-daemon/plugins/cursor/active false
 #exec --no-startup-id xrdb -merge .config/Xressources
 #exec --no-startup-id dunst
-#exec --no-startup-id pasystray
 #exec --no-startup-id xautolock -time 10 -locker "i3lock-fancy -f Source-Sans-Pro"
-#exec --no-startup-id pasystray
 
 # ================= Plasma Integration =================
 
@@ -27,6 +27,9 @@ exec --no-startup-id wmctrl -c Plasma
 for_window [title="Arbeitsfläche.*"] kill; floating enable; border none
 for_window [title="Desktop — Plasma"] kill; floating enable; border none
 for_window [class="ksplashqml"] kill; floating enable; border none
+
+# Prevent plasmashell popups (volume widget, etc.) from getting focus
+no_focus [class="plasmashell" window_type="notification"]
 
 # ================= Fonts/Colors =================
 
@@ -48,8 +51,9 @@ client.background       #212121
 set $mod Mod4+Mod1+Shift+Ctrl
 set $meh Mod1+Shift+Ctrl
 
-set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__scarlett2i4_mono_in_USB_0_0__source
+#set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__scarlett2i_mono_in_USB_0_0__source
 
+set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source
 # ================= Keybinds =================
 
 # Media keys
@@ -87,7 +91,6 @@ floating_modifier $mod
 # start a terminal
 set $term urxvtc
 bindsym $mod+space exec $term
-bindsym $mod+return exec $term
 bindsym $mod+t exec $term
 
 # explorer
@@ -142,7 +145,7 @@ bindsym $mod+q layout toggle split
 bindsym $meh+q kill
 
 # change focus between tiling / floating windows
-bindsym $meh+return focus mode_toggle
+bindsym $meh+Return focus mode_toggle
 
 # toggle tiling / floating
 bindsym $meh+space floating toggle
@@ -178,16 +181,16 @@ set $WS8   "8:   Teams "
 set $WS9   "9:   General "
 set $WS0   "10:   Mail "
 
-workspace $WS1 output DP-4
-workspace $WS2 output DP-2
-workspace $WS3 output DP-4
-workspace $WS4 output DP-2
+workspace $WS1 output DP-2
+workspace $WS2 output HDMI-0
+workspace $WS3 output DP-2
+workspace $WS4 output HDMI-0
 workspace $WS5 output DP-0
-workspace $WS6 output DP-2
+workspace $WS6 output HDMI-0
 #workspace $WS7 output eDP1
 workspace $WS8 output DP-0
 #workspace $WS9 output eDP1
-workspace $WS0 output DP-4
+workspace $WS0 output DP-2
 
 # switch to workspace
 bindsym $mod+1 workspace $WS1
@@ -244,7 +247,7 @@ bindsym $meh+r mode "  "
 # ================= Bar setups =================
 
 bar {
-    tray_output DP-4
+    tray_output DP-0
     font pango:Awesome, pango:Arial 11
     #font pango:Awesome 11
     position top
@@ -262,13 +265,13 @@ bar {
         urgent_workspace    #2F343A88 #D64E4E88 #FFFFFF
     }
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
-    i3bar_command i3bar -t
+    i3bar_command XDG_CURRENT_DESKTOP="i3" i3bar -t
     output DP-0
 }
 
 bar {
-    tray_output DP-4
-#   tray_output primary
+    tray_output None
+#    tray_output none
     font pango:Awesome, pango:Arial 11
     #font pango:Awesome 11
     position top
@@ -286,9 +289,10 @@ bar {
         urgent_workspace    #2F343A88 #D64E4E88 #FFFFFF
     }
     status_command i3blocks -c ~/.config/i3/i3blocks-nomedia.conf
-    i3bar_command i3bar -t
-    output DP-4
+    i3bar_command XDG_CURRENT_DESKTOP="i3" i3bar -t
+#    output DP-4
     output DP-2
+    output HDMI-0
 }
 
 # ================= Windowing setups =================
@@ -311,6 +315,10 @@ for_window [class="Klipper"] floating enable; border none
 for_window [class="Plasmoidviewer"] floating enable; border none
 for_window [class="Skype" window_role="ConversationsWindow"] floating enable;
 for_window [class="SimpleScreenRecorder"] floating enable;
+for_window [class="automaited-native"] move container to workspace $WS9
+for_window [class="chromium (aiConomix)"] move container to workspace $WS9
+for_window [class="plasmawindowed"] floating enable
+for_window [title="Systemabschnitt der Kontrollleiste"] resize set 128 ppt 255 ppt; move position 1295 ppt 43 ppt
 
 
 for_window [window_role="pop-up"]       floating enable
@@ -325,6 +333,8 @@ for_window [class="firefox"] move container to workspace $WS7
 # This one is for Matlab, which has some weird way of creating a non visible window
 for_window [title="HG_Peer_OffScreenWindow"] move scratchpad
 
+for_window [class="dolphin"] floating disable
+for_window [class="xdg-desktop-portal-kde"] floating disable
 for_window [class="^.*"]                border pixel 2
 
 # ================= Additional i3 config =================

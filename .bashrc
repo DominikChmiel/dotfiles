@@ -264,3 +264,4 @@ eval "$(direnv hook bash)"
 
 eval $(glab completion -s bash)
 
+export BROWSER=/bin/chromium
