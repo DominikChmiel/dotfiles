@@ -98,15 +98,15 @@
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": " {volume}%",
+        "format-muted": " {volume}%",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
         },
         "on-click": "pavucontrol",
         "tooltip": true,
@@ -129,6 +129,7 @@
 
     "custom/mic": {
         "exec": "~/.config/waybar/scripts/mic-status.sh",
+        "return-type": "json",
         "interval": 1,
         "format": "{}",
         "on-click": "pactl set-source-mute alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source toggle",

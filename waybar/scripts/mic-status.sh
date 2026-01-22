@@ -7,7 +7,9 @@ MIC="alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source"
 MUTED=$(pactl get-source-mute "$MIC" | awk '{print $2}')
 
 if [ "$MUTED" = "yes" ]; then
-    echo " "
+    # Muted (OFF) - normal color
+    echo '{"text":"", "class":"muted"}'
 else
-    echo " "
+    # Unmuted (ON) - RED color  
+    echo '{"text":"", "class":"on"}'
 fi

@@ -64,10 +64,34 @@ window#waybar.hidden {
     padding: 0 10px;
     color: #F3F4F5;
     font-family: "FontAwesome", "Arial";
+    border-left: 2px solid rgba(255, 255, 255, 0.3);
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 #clock {
     font-weight: normal;
+    min-width: 180px;
+}
+
+#network {
+    min-width: 140px;
+}
+
+#cpu {
+    min-width: 50px;
+}
+
+#memory {
+    min-width: 70px;
+}
+
+#disk {
+    min-width: 90px;
+}
+
+#pulseaudio {
+    min-width: 60px;
 }
 
 #mpris {
@@ -133,6 +157,10 @@ window#waybar.hidden {
 
 #custom-mic {
     color: #F3F4F5;
+}
+
+#custom-mic.on {
+    color: #ff0000;
 }
 
 #tray {
