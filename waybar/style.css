@@ -159,6 +159,10 @@ window#waybar.hidden {
     color: #F3F4F5;
 }
 
+#custom-mic.muted {
+    color: #F3F4F5;
+}
+
 #custom-mic.on {
     color: #ff0000;
 }

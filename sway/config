@@ -191,16 +191,16 @@ bindsym Ctrl+space exec makoctl dismiss
 # ================= Workspace setups =================
 
 # Customize workspace name
-set $WS1   "1:   Chromium "
-set $WS2   "2:   Chromium "
-set $WS3   "3:   Code "
-set $WS4   "4:   Code "
-set $WS5   "5:   Bash "
-set $WS6   "6:   General "
-set $WS7   "7:   General "
-set $WS8   "8:   Teams "
-set $WS9   "9:   General "
-set $WS0   "10:   Mail "
+set $WS1   "1: Chromium"
+set $WS2   "2: Chromium"
+set $WS3   "3: Code"
+set $WS4   "4: Code"
+set $WS5   "5: Bash"
+set $WS6   "6: General"
+set $WS7   "7: General"
+set $WS8   "8: Teams"
+set $WS9   "9: General"
+set $WS0   "10: Mail"
 
 # Workspace to output assignments
 # DP-2 (center 4K): Main workspaces for Chromium, Code, Mail

@@ -21,22 +21,22 @@
     ],
 
     // Modules configuration
-    "sway/workspaces": {
+        "sway/workspaces": {
         "disable-scroll": false,
         "all-outputs": false,
-        "format": "{name}",
-        "persistent_workspaces": {
-            "1:   Chromium ": [],
-            "2:   Chromium ": [],
-            "3:   Code ": [],
-            "4:   Code ": [],
-            "5:   Bash ": [],
-            "6:   General ": [],
-            "7:   General ": [],
-            "8:   Teams ": [],
-            "9:   General ": [],
-            "10:   Mail ": []
-    }
+        "format": "{value}: {icon} {name}",
+        "format-icons": {
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "6": "",
+            "7": "",
+            "8": "",
+            "9": "",
+            "10": ""
+        }
     },
 
     "sway/mode": {

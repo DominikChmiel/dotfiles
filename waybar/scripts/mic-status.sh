@@ -8,8 +8,8 @@ MUTED=$(pactl get-source-mute "$MIC" | awk '{print $2}')
 
 if [ "$MUTED" = "yes" ]; then
     # Muted (OFF) - normal color
-    echo '{"text":"", "class":"muted"}'
+    echo '{"text":"", "class":"muted"}'
 else
     # Unmuted (ON) - RED color  
-    echo '{"text":"", "class":"on"}'
+    echo '{"text":"", "class":"on"}'
 fi
