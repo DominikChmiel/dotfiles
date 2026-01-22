@@ -1,7 +1,36 @@
 #!/bin/bash
+#
+# DEPRECATED: This script is kept for backwards compatibility.
+# Please use the new unified setup script instead:
+#
+#   ./setup.sh wayland
+#
+# The new setup.sh script provides:
+#   - Better error handling
+#   - Package checking and installation
+#   - Easy switching between X11 and Wayland
+#   - Status checking
+#
+# Redirecting to unified setup script...
 
-# Wayland Setup Script
-# This script sets up Sway and related Wayland configurations
+echo "=========================================="
+echo "NOTICE: setup_wayland.sh is deprecated"
+echo "=========================================="
+echo ""
+echo "This script has been replaced by the unified setup.sh"
+echo "Running: ./setup.sh wayland"
+echo ""
+sleep 2
+
+# Run the unified setup script
+exec "$(dirname "$0")/setup.sh" wayland
+
+# Original script below (kept for reference)
+exit 0
+
+# ============================================
+# ORIGINAL SCRIPT (NO LONGER EXECUTED)
+# ============================================
 
 set -e
 

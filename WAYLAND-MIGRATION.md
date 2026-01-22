@@ -2,6 +2,23 @@
 
 This guide helps you transition from the i3+Plasma X11 setup to Sway standalone on Wayland.
 
+## Quick Start
+
+The easiest way to migrate is using the unified setup script:
+
+```bash
+# Switch to Wayland configuration
+./setup.sh wayland
+
+# Or if you've already setup X11, just switch
+./setup.sh switch
+
+# Check current configuration
+./setup.sh status
+```
+
+For manual installation or detailed information, continue reading below.
+
 ## Prerequisites
 
 ### Required Packages
@@ -39,9 +56,21 @@ sudo pacman -S network-manager-applet blueman
 
 ## Installation Steps
 
-### 1. Link Configuration Files
+### Automatic Installation (Recommended)
 
-From the dotfiles directory, create symlinks:
+```bash
+./setup.sh wayland
+```
+
+This will:
+- Check and install required packages
+- Create all necessary symlinks
+- Configure shell environment
+- Show next steps
+
+### Manual Installation
+
+If you prefer manual setup, from the dotfiles directory:
 
 ```bash
 # Sway configuration
@@ -53,8 +82,13 @@ ln -sf ~/projects/dotfiles/waybar ~/.config/waybar
 # Foot terminal configuration
 ln -sf ~/projects/dotfiles/foot ~/.config/foot
 
-# Wayland shell environment (optional - see below)
-# You can source .bashrc-wayland in your .bashrc when on Wayland
+# Wayland shell environment
+ln -sf ~/projects/dotfiles/.bashrc-wayland ~/.bashrc-wayland
+
+# Add to .bashrc:
+echo 'if [ "$XDG_SESSION_TYPE" = "wayland" ]; then' >> ~/.bashrc
+echo '    source ~/.bashrc-wayland' >> ~/.bashrc
+echo 'fi' >> ~/.bashrc
 ```
 
 ### 2. Configure Display Outputs
@@ -272,12 +306,36 @@ swaymsg -t get_tree | jq '.. | select(.shell?) | {name, shell}'
 
 Apps with `"shell": "xwayland"` are running via XWayland.
 
-## Reverting to X11
+## Switching Between X11 and Wayland
 
-Your original i3 configuration is preserved on the `master` branch. To switch back:
+### Using the Setup Script (Easiest)
 
-1. Select "Plasma (X11)" or "i3" from your login screen
-2. Your X11 configs remain unchanged in `~/.config/i3/`
+```bash
+# Switch to the other configuration
+./setup.sh switch
+
+# Check what's currently active
+./setup.sh status
+```
+
+### Manual Switching
+
+Your configurations coexist, so you can:
+
+1. **At login screen**: Select "i3" or "Sway" session
+2. **Configuration files**: Both `~/.config/i3/` and `~/.config/sway/` exist
+3. **Shell environment**: Auto-detects session type via `$XDG_SESSION_TYPE`
+
+### Reverting to X11 Permanently
+
+```bash
+./setup.sh x11
+```
+
+This will:
+- Ensure X11 configuration is linked
+- Remove Wayland-specific shell configuration
+- Preserve your Wayland configs (just not linked)
 
 ## Migration Checklist
 
