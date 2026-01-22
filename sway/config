@@ -38,6 +38,7 @@ output DP-1 {
     pos 1197 883
     transform 270
     scale 1.0
+    max_render_time 16  # 16ms for 60Hz
 }
 
 # Center monitor - 4K with scaling
@@ -45,6 +46,7 @@ output DP-2 {
     mode 3840x2160@120Hz
     pos 2637 984
     scale 1.5
+    max_render_time 8   # 8ms for 120Hz - reduces input lag
 }
 
 # Right monitor
@@ -52,6 +54,7 @@ output HDMI-A-1 {
     mode 2560x1440@120Hz
     pos 5196 984
     scale 1.0
+    max_render_time 8   # 8ms for 120Hz - reduces input lag
 }
 
 # Set wallpapers (optional - uncomment and set paths):
@@ -332,18 +335,6 @@ gaps outer 2
 
 # Enable XWayland for X11 app compatibility
 xwayland enable
-
-# ================= Performance & Input Lag Optimization =================
-#
-# Reduce input lag and improve cursor smoothness (especially with Nvidia)
-# Lower values = less latency but potentially more tearing
-# Try values: off, 1, 3, 5, 10 (milliseconds)
-max_render_time off
-
-# Optional: Force specific refresh rates per output
-# output DP-0 max_render_time 8    # 8ms ~= 120Hz
-# output DP-2 max_render_time 8    # 8ms ~= 120Hz
-# output HDMI-0 max_render_time 16 # 16ms ~= 60Hz
 
 # ================= Input Configuration =================
 #
