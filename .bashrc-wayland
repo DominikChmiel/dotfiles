@@ -9,6 +9,15 @@ export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export MOZ_ENABLE_WAYLAND=1
 export MOZ_DBUS_REMOTE=1
 
+# Nvidia-specific fixes for cursor lag
+# Forces software cursor rendering instead of hardware cursor planes
+export WLR_NO_HARDWARE_CURSORS=1
+
+# Nvidia renderer selection (use if experiencing issues)
+# export WLR_RENDERER=vulkan
+# export GBM_BACKEND=nvidia-drm
+# export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
 # Force Wayland for Electron apps (VSCode, etc.)
 export ELECTRON_OZONE_PLATFORM_HINT=wayland
 
