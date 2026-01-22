@@ -1,0 +1,50 @@
+# Wayland-specific environment configuration
+# Source this from .bashrc when running under Wayland
+
+# Wayland environment variables
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=sway
+export QT_QPA_PLATFORM=wayland
+export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+export MOZ_ENABLE_WAYLAND=1
+export MOZ_DBUS_REMOTE=1
+
+# Force Wayland for Electron apps (VSCode, etc.)
+export ELECTRON_OZONE_PLATFORM_HINT=wayland
+
+# SDL (games) - prefer Wayland
+export SDL_VIDEODRIVER=wayland
+
+# Java applications
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# Clutter (used by some GTK apps)
+export CLUTTER_BACKEND=wayland
+
+# Chromium/Chrome flags
+export CHROME_FLAGS="--enable-features=UseOzonePlatform --ozone-platform=wayland"
+
+# Wayland tool aliases (replacing X11 equivalents)
+alias xclip='wl-copy'
+alias xclip-o='wl-paste'
+alias xsel='wl-paste'
+
+# Update existing aliases to use Wayland-native tools
+alias plyt='mpv --wayland-app-id=mpv $(wl-paste) & disown'
+
+# Update chromium/browser to use Wayland
+alias chromium='chromium --enable-features=UseOzonePlatform --ozone-platform=wayland'
+
+# Screenshot aliases
+alias screenshot='grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png'
+alias screenshot-area='grim -g "$(slurp)" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png'
+
+# Logout alias for Sway (instead of KDE)
+alias logout='swaymsg exit'
+
+# Helper to identify current session type
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    export PS1_SESSION_INDICATOR="[W]"
+else
+    export PS1_SESSION_INDICATOR="[X11]"
+fi

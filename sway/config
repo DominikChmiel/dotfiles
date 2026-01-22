@@ -1,0 +1,327 @@
+# Sway config file
+#
+# Read `man 5 sway` for a complete reference.
+
+# ================= Startup applications =================
+
+# Notification daemon (mako is Wayland-native, but dunst also works)
+exec --no-startup-id mako
+# Alternative: exec --no-startup-id dunst
+
+# Network manager applet (runs via XWayland)
+exec --no-startup-id nm-applet
+
+# Wallpaper - use swaybg or set in output config
+# TODO: Set your wallpaper path here
+# exec swaybg -i /path/to/wallpaper.jpg -m fill
+# Or use output command below
+
+# Idle management (optional)
+# exec swayidle -w \
+#     timeout 300 'swaylock -f' \
+#     timeout 600 'swaymsg "output * dpms off"' \
+#     resume 'swaymsg "output * dpms on"' \
+#     before-sleep 'swaylock -f'
+
+# ================= Display/Output Configuration =================
+#
+# Get your output names with: swaymsg -t get_outputs
+# Output names may differ from X11! Common names: HDMI-A-1, DP-1, eDP-1
+#
+# TODO: Update these output names after running `swaymsg -t get_outputs`
+# Example output configuration:
+# output HDMI-A-1 pos 0 0 res 1920x1080
+# output DP-1 pos 1920 0 res 2560x1440
+# output HDMI-A-1 bg /path/to/wallpaper.jpg fill
+
+# Placeholder for your outputs (update after checking output names):
+# output OUTPUT_NAME_1 pos 0 0
+# output OUTPUT_NAME_2 pos 1920 0
+# output OUTPUT_NAME_3 pos 3840 0
+
+# ================= Fonts/Colors =================
+
+font pango:Source Sans Pro, Font Awesome 10
+
+# config colors
+# class                 border  backgr. text    indicator child_border
+client.focused          #2B83A6 #2B83A6 #FFFFFF #DDDDDD   #2B83A6
+client.focused_inactive #212121 #212121 #86888C #292D2E   #212121
+client.unfocused        #212121 #212121 #86888C #292D2E   #212121
+client.urgent           #2F343A #D64E4E #FFFFFF #D64E4E   #D64E4E
+client.placeholder      #212121 #0C0C0C #FFFFFF #212121   #212121
+client.background       #212121
+
+# ================= Variables =================
+
+set $mod Mod4+Mod1+Shift+Ctrl
+set $meh Mod1+Shift+Ctrl
+
+set $mic alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source
+
+# ================= Keybinds =================
+
+# Media keys
+# Pulse Audio controls (PulseAudio/PipeWire)
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +2%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -2%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Screen brightness controls (using brightnessctl)
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioPause exec playerctl pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
+bindsym XF86HomePage exec chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+# Application launcher (rofi with Wayland support)
+bindsym $mod+o exec "rofi -combi-modi run,window -show combi -modi combi -theme android_notification -sort -sorting-method fzf -matching fuzzy"
+
+# Microphone mute toggle
+bindsym $mod+m exec pactl set-source-mute $mic toggle
+
+# Use Mouse+$mod to drag floating windows
+floating_modifier $mod normal
+
+# Start a terminal (foot is fastest Wayland terminal)
+set $term foot
+bindsym $mod+space exec $term
+bindsym $mod+t exec $term
+
+# File explorer
+bindsym $mod+e exec dolphin
+
+# Remove border
+bindsym $mod+u border none
+
+# Change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# Alternatively, cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move focused window
+bindsym $meh+j move left
+bindsym $meh+k move down
+bindsym $meh+l move up
+bindsym $meh+semicolon move right
+
+# Alternatively, cursor keys:
+bindsym $meh+Left move left
+bindsym $meh+Down move down
+bindsym $meh+Up move up
+bindsym $meh+Right move right
+
+# Allow moving to different outputs
+bindsym $meh+u move workspace to output right
+bindsym $meh+p move workspace to output left
+
+# Split in horizontal orientation
+bindsym $mod+h split h
+
+# Split in vertical orientation
+bindsym $mod+v split v
+
+# Enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+q layout toggle split
+
+# Kill focused window
+bindsym $meh+q kill
+
+# Change focus between tiling / floating windows
+bindsym $meh+Return focus mode_toggle
+
+# Toggle tiling / floating
+bindsym $meh+space floating toggle
+
+# Focus the parent container
+bindsym $mod+a focus parent
+
+# Focus the child container
+#bindsym $mod+d focus child
+
+# Screenshot using grim + slurp (Wayland-native)
+bindsym Print exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+
+# Reload configuration
+bindsym $mod+c reload
+
+# Exit sway (logs you out of your Wayland session)
+# bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -b 'Yes' 'swaymsg exit'
+
+# Notification dismiss
+bindsym Ctrl+space exec makoctl dismiss
+# Alternative for dunst: bindsym Ctrl+space exec dunstctl close
+
+# ================= Workspace setups =================
+
+# Customize workspace name
+set $WS1   "1:   Chromium "
+set $WS2   "2:   Chromium "
+set $WS3   "3:   Code "
+set $WS4   "4:   Code "
+set $WS5   "5:   Bash "
+set $WS6   "6:   General "
+set $WS7   "7:   General "
+set $WS8   "8:   Teams "
+set $WS9   "9:   General "
+set $WS0   "10:   Mail "
+
+# TODO: Update these output names after running `swaymsg -t get_outputs`
+# workspace $WS1 output OUTPUT_NAME_1
+# workspace $WS2 output OUTPUT_NAME_2
+# workspace $WS3 output OUTPUT_NAME_1
+# workspace $WS4 output OUTPUT_NAME_2
+# workspace $WS5 output OUTPUT_NAME_3
+# workspace $WS6 output OUTPUT_NAME_2
+# workspace $WS8 output OUTPUT_NAME_3
+# workspace $WS0 output OUTPUT_NAME_1
+
+# Switch to workspace
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+bindsym $mod+8 workspace $WS8
+bindsym $mod+9 workspace $WS9
+bindsym $mod+0 workspace $WS0
+
+# Move focused container to workspace
+bindsym $meh+1 move container to workspace $WS1
+bindsym $meh+2 move container to workspace $WS2
+bindsym $meh+3 move container to workspace $WS3
+bindsym $meh+4 move container to workspace $WS4
+bindsym $meh+5 move container to workspace $WS5
+bindsym $meh+6 move container to workspace $WS6
+bindsym $meh+7 move container to workspace $WS7
+bindsym $meh+8 move container to workspace $WS8
+bindsym $meh+9 move container to workspace $WS9
+bindsym $meh+0 move container to workspace $WS0
+
+# ================= Alternate modes setups =================
+
+# Resize window mode
+mode "  " {
+        # These bindings trigger as soon as you enter the resize mode
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym odiaeresis resize grow width 10 px or 10 ppt
+
+        # Same bindings, but for the arrow keys
+        bindsym Left resize grow width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize shrink width 10 px or 10 ppt
+
+        # Back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $meh+r mode "  "
+
+# ================= Bar setups =================
+#
+# Using Waybar (Wayland-native status bar)
+# Configuration: ~/.config/waybar/config
+# Styling: ~/.config/waybar/style.css
+
+bar {
+    swaybar_command waybar
+}
+
+# ================= Windowing setups =================
+# Window rules for floating windows
+
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_role="plugin_ui"] floating enable
+for_window [title="Preferences$"] floating enable
+for_window [title="Menu Update"] floating enable
+for_window [title="___"] floating enable
+for_window [instance="Download"] floating enable
+
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="mpv"] floating enable
+for_window [class="SimpleScreenRecorder"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="mpv"] floating enable; move absolute position 640px 764px
+
+# Workspace assignments
+for_window [class="automaited-native"] move container to workspace $WS9
+for_window [class="chromium (aiConomix)"] move container to workspace $WS9
+for_window [class="Microsoft Teams"] move container to workspace $WS8
+for_window [class="firefox"] move container to workspace $WS7
+for_window [title="Microsoft Teams Notification"] floating enable
+for_window [title="Microsoft Teams-Benachrichtigung"] floating enable
+
+# Disable floating for certain applications
+for_window [app_id="org.kde.dolphin"] floating disable
+for_window [class="dolphin"] floating disable
+
+# Default border
+for_window [class="^.*"] border pixel 2
+for_window [app_id="^.*"] border pixel 2
+
+# Matlab scratchpad window
+for_window [title="HG_Peer_OffScreenWindow"] move scratchpad
+
+# ================= Additional Sway config =================
+
+# Set popups during fullscreen mode
+popup_during_fullscreen smart
+
+# Focus follows mouse
+focus_follows_mouse no
+
+# Window borders
+default_border pixel 0
+default_floating_border normal 0
+hide_edge_borders none
+
+# Gaps
+smart_borders on
+smart_gaps on
+gaps inner 8
+gaps outer 2
+
+# Enable XWayland for X11 app compatibility
+xwayland enable
+
+# ================= Input Configuration =================
+#
+# Example input configuration (uncomment and adjust as needed):
+# input type:keyboard {
+#     xkb_layout us
+#     xkb_variant ,nodeadkeys
+#     xkb_options grp:alt_shift_toggle
+# }
+#
+# input type:touchpad {
+#     tap enabled
+#     natural_scroll enabled
+# }
+
+# ================= Include additional configs =================
+# You can split the configuration into multiple files:
+# include ~/.config/sway/config.d/*

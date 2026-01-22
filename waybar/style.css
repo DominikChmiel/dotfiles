@@ -1,0 +1,147 @@
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "Font Awesome", "Arial";
+    font-size: 11px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(33, 33, 33, 0.53);
+    color: #F3F4F5;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    background-color: transparent;
+    color: #DDDDDD;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+    background: rgba(43, 131, 166, 0.4);
+    border-bottom: 2px solid rgba(43, 131, 166, 0.8);
+}
+
+#workspaces button.focused {
+    background-color: rgba(43, 131, 166, 0.53);
+    border-bottom: 2px solid #2B83A6;
+    color: #FFFFFF;
+}
+
+#workspaces button.active {
+    background-color: rgba(33, 33, 33, 0.53);
+    color: #FFFFFF;
+}
+
+#workspaces button.urgent {
+    background-color: rgba(214, 78, 78, 0.53);
+    color: #FFFFFF;
+}
+
+#mode {
+    background-color: rgba(43, 131, 166, 0.7);
+    padding: 0 10px;
+}
+
+#clock,
+#cpu,
+#memory,
+#disk,
+#network,
+#pulseaudio,
+#bluetooth,
+#mpris,
+#tray,
+#custom-mic {
+    padding: 0 10px;
+    color: #F3F4F5;
+}
+
+#clock {
+    font-weight: normal;
+}
+
+#mpris {
+    color: #F3F4F5;
+}
+
+#mpris.paused {
+    color: #999999;
+}
+
+#cpu {
+    color: #F3F4F5;
+}
+
+#cpu.warning {
+    color: #FFC123;
+}
+
+#cpu.critical {
+    color: #FF6565;
+}
+
+#memory {
+    color: #F3F4F5;
+}
+
+#memory.warning {
+    color: #FFC123;
+}
+
+#memory.critical {
+    color: #FF6565;
+}
+
+#disk {
+    color: #F3F4F5;
+}
+
+#network {
+    color: #F3F4F5;
+}
+
+#network.disconnected {
+    color: #FF6565;
+}
+
+#pulseaudio {
+    color: #F3F4F5;
+}
+
+#pulseaudio.muted {
+    color: #999999;
+}
+
+#bluetooth {
+    color: #F3F4F5;
+}
+
+#bluetooth.disabled,
+#bluetooth.off {
+    color: #666666;
+}
+
+#custom-mic {
+    color: #F3F4F5;
+}
+
+#tray {
+    color: #F3F4F5;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: rgba(214, 78, 78, 0.53);
+}
