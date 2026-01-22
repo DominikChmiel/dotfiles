@@ -25,19 +25,39 @@ exec --no-startup-id nm-applet
 
 # ================= Display/Output Configuration =================
 #
-# Output configuration based on your multi-monitor setup
-# Your displays: DP-0 (left), DP-2 (center), HDMI-0 (right)
+# Multi-monitor setup:
+# - DP-1 (Dell P2720D): Left, portrait mode, 2560x1440@60Hz
+# - DP-2 (MSI MPG 274URF QD): Center, 4K@120Hz with 1.5x scaling
+# - HDMI-A-1 (Dell S2721DGF): Right, 2560x1440@120Hz
 #
-# Configure outputs with positions matching your physical layout
-# Uncomment and adjust resolutions as needed:
-# output DP-0 pos 0 0 res 2560x1440
-# output DP-2 pos 1440 178 res 2560x1440
-# output HDMI-0 pos 4000 178 res 1920x1080
-#
-# Set wallpapers (optional):
-# output DP-0 bg /path/to/wallpaper.jpg fill
+# Note: Positions are auto-arranged by wdisplays, adjust if needed
+
+# Left monitor - Portrait orientation
+output DP-1 {
+    mode 2560x1440@60Hz
+    pos 1197 883
+    transform 270
+    scale 1.0
+}
+
+# Center monitor - 4K with scaling
+output DP-2 {
+    mode 3840x2160@120Hz
+    pos 2637 984
+    scale 1.5
+}
+
+# Right monitor
+output HDMI-A-1 {
+    mode 2560x1440@120Hz
+    pos 5196 984
+    scale 1.0
+}
+
+# Set wallpapers (optional - uncomment and set paths):
+# output DP-1 bg /path/to/wallpaper.jpg fill
 # output DP-2 bg /path/to/wallpaper.jpg fill
-# output HDMI-0 bg /path/to/wallpaper.jpg fill
+# output HDMI-A-1 bg /path/to/wallpaper.jpg fill
 
 # ================= Fonts/Colors =================
 
@@ -184,14 +204,18 @@ set $WS8   "8:   Teams "
 set $WS9   "9:   General "
 set $WS0   "10:   Mail "
 
-# Workspace to output assignments (matching your i3 setup)
+# Workspace to output assignments
+# DP-2 (center 4K): Main workspaces for Chromium, Code, Mail
+# HDMI-A-1 (right): Secondary Chromium, Code, General
+# DP-1 (left portrait): Bash, Teams
 workspace $WS1 output DP-2
-workspace $WS2 output HDMI-0
+workspace $WS2 output HDMI-A-1
 workspace $WS3 output DP-2
-workspace $WS4 output HDMI-0
-workspace $WS5 output DP-0
-workspace $WS6 output HDMI-0
-workspace $WS8 output DP-0
+workspace $WS4 output HDMI-A-1
+workspace $WS5 output DP-1
+workspace $WS6 output HDMI-A-1
+workspace $WS7 output DP-1
+workspace $WS8 output DP-1
 workspace $WS0 output DP-2
 
 # Switch to workspace
