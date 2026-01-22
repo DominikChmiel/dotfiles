@@ -306,6 +306,47 @@ swaymsg -t get_tree | jq '.. | select(.shell?) | {name, shell}'
 
 Apps with `"shell": "xwayland"` are running via XWayland.
 
+### Nvidia Proprietary Drivers
+
+**Important:** Sway officially does not support Nvidia proprietary drivers due to their lack of proper GBM (Generic Buffer Management) support. However, you can still use Sway with the `--unsupported-gpu` flag.
+
+**Issues you may encounter:**
+- Screen flickering
+- Rendering glitches
+- Reduced performance
+- Application crashes
+
+**Workaround:**
+
+Launch Sway with the unsupported GPU flag:
+
+```bash
+sway --unsupported-gpu
+```
+
+Or add to your `~/.profile-wayland` (already configured in this setup):
+
+```bash
+exec sway --unsupported-gpu
+```
+
+**Recommended solution:**
+
+Consider switching to the open-source Nouveau driver for better Wayland support:
+
+```bash
+# Blacklist nvidia drivers
+sudo nano /etc/modprobe.d/blacklist-nvidia.conf
+# Add: blacklist nvidia
+
+# Rebuild initramfs
+sudo mkinitcpio -P
+
+# Reboot
+```
+
+Note: Nouveau has lower performance in gaming/GPU compute but works much better with Wayland compositors.
+
 ## Switching Between X11 and Wayland
 
 ### Using the Setup Script (Easiest)

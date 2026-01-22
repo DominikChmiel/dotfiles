@@ -265,3 +265,8 @@ eval "$(direnv hook bash)"
 eval $(glab completion -s bash)
 
 export BROWSER=/bin/chromium
+
+# Source Wayland environment if running under Wayland
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    source ~/.bashrc-wayland
+fi

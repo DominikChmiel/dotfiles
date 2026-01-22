@@ -85,8 +85,9 @@ bindsym $mod+o exec "rofi -combi-modi run,window -show combi -modi combi -theme 
 # Microphone mute toggle
 bindsym $mod+m exec pactl set-source-mute $mic toggle
 
-# Use Mouse+$mod to drag floating windows
-floating_modifier $mod normal
+# Use Mouse+Mod4 (Super) to drag floating windows
+# Note: floating_modifier only accepts single modifiers, not combinations
+floating_modifier Mod4 normal
 
 # Start a terminal (foot is fastest Wayland terminal)
 set $term foot
