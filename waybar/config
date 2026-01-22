@@ -26,17 +26,17 @@
         "all-outputs": false,
         "format": "{name}",
         "persistent_workspaces": {
-            "1:   Chromium ": [],
-            "2:   Chromium ": [],
-            "3:   Code ": [],
-            "4:   Code ": [],
-            "5:   Bash ": [],
-            "6:   General ": [],
-            "7:   General ": [],
-            "8:   Teams ": [],
-            "9:   General ": [],
-            "10:   Mail ": []
-        }
+            "1:   Chromium ": [],
+            "2:   Chromium ": [],
+            "3:   Code ": [],
+            "4:   Code ": [],
+            "5:   Bash ": [],
+            "6:   General ": [],
+            "7:   General ": [],
+            "8:   Teams ": [],
+            "9:   General ": [],
+            "10:   Mail ": []
+    }
     },
 
     "sway/mode": {
@@ -63,33 +63,33 @@
     },
 
     "clock": {
-        "format": " {:%a, %d %b <b>%H:%M</b>}",
+        "format": " {:%a, %d %b <b>%H:%M</b>}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
     "cpu": {
-        "format": " {usage}%",
+        "format": " {usage}%",
         "tooltip": true,
         "interval": 3
     },
 
     "memory": {
-        "format": " {used:0.1f}G",
+        "format": " {used:0.1f}G",
         "tooltip": true,
         "tooltip-format": "RAM: {used:0.1f}GiB / {total:0.1f}GiB\nSwap: {swapUsed:0.1f}GiB / {swapTotal:0.1f}GiB"
     },
 
     "disk": {
         "interval": 30,
-        "format": " {free}",
+        "format": " {free}",
         "path": "/home",
         "tooltip": true,
         "tooltip-format": "Available: {free} / {total}"
     },
 
     "network": {
-        "format-wifi": " {bandwidthDownBits}  {bandwidthUpBits}",
-        "format-ethernet": " {bandwidthDownBits}  {bandwidthUpBits}",
+        "format-wifi": " {bandwidthDownBits}  {bandwidthUpBits}",
+        "format-ethernet": " {bandwidthDownBits}  {bandwidthUpBits}",
         "format-disconnected": "⚠ Disconnected",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
         "tooltip-format-wifi": "{essid} ({signalStrength}%): {ipaddr}/{cidr}",

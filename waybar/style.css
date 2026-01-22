@@ -1,8 +1,8 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "Font Awesome", "Arial";
-    font-size: 11px;
+    font-family: "Arial";
+    font-size: 13px;
     min-height: 0;
 }
 
@@ -22,6 +22,7 @@ window#waybar.hidden {
     background-color: transparent;
     color: #DDDDDD;
     border-bottom: 2px solid transparent;
+    font-family: "FontAwesome", "Arial";
 }
 
 #workspaces button:hover {
@@ -62,6 +63,7 @@ window#waybar.hidden {
 #custom-mic {
     padding: 0 10px;
     color: #F3F4F5;
+    font-family: "FontAwesome", "Arial";
 }
 
 #clock {
