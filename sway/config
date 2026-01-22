@@ -38,7 +38,6 @@ output DP-1 {
     pos 1197 883
     transform 270
     scale 1.0
-    max_render_time 16  # 16ms for 60Hz
     bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
 
@@ -47,7 +46,6 @@ output DP-2 {
     mode 3840x2160@120Hz
     pos 2637 984
     scale 1.5
-    max_render_time 8   # 8ms for 120Hz - reduces input lag
     bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
 
@@ -56,7 +54,6 @@ output HDMI-A-1 {
     mode 2560x1440@120Hz
     pos 5196 984
     scale 1.0
-    max_render_time 8   # 8ms for 120Hz - reduces input lag
     bg /home/aiconomix/Wallpapers/Minimalistic2.jpg fill
 }
 
