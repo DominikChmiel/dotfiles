@@ -2,6 +2,11 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+# ================= Environment Variables =================
+
+# For screen sharing to work properly
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+
 # ================= Startup applications =================
 
 # Notification daemon (mako is Wayland-native, but dunst also works)

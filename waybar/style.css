@@ -1,8 +1,9 @@
 * {
     border: none;
     border-radius: 0;
-    font-family: "Arial";
+    font-family: "Roboto", "Arial";
     font-size: 13px;
+    font-weight: 500;
     min-height: 0;
 }
 
@@ -18,10 +19,10 @@ window#waybar.hidden {
 }
 
 #workspaces button {
-    padding: 0 10px;
+    padding: 0 6px;
     background-color: transparent;
     color: #DDDDDD;
-    border-bottom: 2px solid transparent;
+    border-bottom: 2px solid rgba(178, 178, 178, 0.53);
     font-family: "FontAwesome", "Arial";
 }
 
@@ -48,50 +49,55 @@ window#waybar.hidden {
 
 #mode {
     background-color: rgba(43, 131, 166, 0.7);
-    padding: 0 10px;
+    padding: 0 6px;
 }
 
 #clock,
 #cpu,
 #memory,
 #disk,
-#network,
+#custom-network,
 #pulseaudio,
 #bluetooth,
 #mpris,
 #tray,
 #custom-mic {
-    padding: 0 10px;
+    padding: 0 6px 0 10px;
     color: #F3F4F5;
     font-family: "FontAwesome", "Arial";
     border-left: 2px solid rgba(255, 255, 255, 0.3);
-    margin-top: 6px;
-    margin-bottom: 6px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #clock {
-    font-weight: normal;
-    min-width: 180px;
-}
-
-#network {
+    font-weight: 500;
     min-width: 140px;
 }
 
+#custom-network {
+    min-width: 130px;
+    font-family: "FontAwesome", "Roboto Mono", "monospace";
+}
+
 #cpu {
-    min-width: 50px;
+    min-width: 55px;
 }
 
 #memory {
-    min-width: 70px;
+    min-width: 75px;
 }
 
 #disk {
-    min-width: 90px;
+    min-width: 95px;
 }
 
 #pulseaudio {
     min-width: 60px;
+}
+
+#custom-mic {
+    min-width: 16px;
 }
 
 #mpris {
@@ -130,12 +136,8 @@ window#waybar.hidden {
     color: #F3F4F5;
 }
 
-#network {
+#custom-network {
     color: #F3F4F5;
-}
-
-#network.disconnected {
-    color: #FF6565;
 }
 
 #pulseaudio {
@@ -148,6 +150,7 @@ window#waybar.hidden {
 
 #bluetooth {
     color: #F3F4F5;
+    min-width: 16px;
 }
 
 #bluetooth.disabled,
