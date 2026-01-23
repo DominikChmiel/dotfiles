@@ -180,8 +180,11 @@ bindsym $mod+a focus parent
 # Focus the child container
 #bindsym $mod+d focus child
 
-# Screenshot using grim + slurp (Wayland-native)
-bindsym Print exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+# Screenshot using grim + slurp + satty (Wayland-native flameshot alternative)
+# Print: capture selection and open in satty for annotation/save/copy
+bindsym Print exec grim -g "$(slurp)" - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+# Ctrl+Print: capture full screen and open in satty
+bindsym Ctrl+Print exec grim - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
 
 # Reload configuration
 bindsym $mod+c reload
@@ -291,6 +294,7 @@ for_window [instance="Download"] floating enable
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="mpv"] floating enable
+for_window [app_id="com.gabm.satty"] fullscreen enable
 for_window [class="SimpleScreenRecorder"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="mpv"] floating enable; move absolute position 640px 764px
