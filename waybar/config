@@ -120,8 +120,9 @@
         "exec": "~/.config/waybar/scripts/mic-status.sh",
         "return-type": "json",
         "interval": 1,
+        "signal": 8,
         "format": "{}",
-        "on-click": "pactl set-source-mute alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source toggle",
+        "on-click": "pactl set-source-mute alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source toggle && pkill -RTMIN+8 waybar",
         "tooltip": false
     }
 }

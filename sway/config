@@ -105,8 +105,8 @@ bindsym XF86HomePage exec chromium --enable-features=UseOzonePlatform --ozone-pl
 # Application launcher (rofi with Wayland support)
 bindsym $mod+o exec "rofi -combi-modi run,window -show combi -modi combi -theme android_notification -sort -sorting-method fzf -matching fuzzy"
 
-# Microphone mute toggle
-bindsym $mod+m exec pactl set-source-mute $mic toggle
+# Microphone mute toggle (send signal to waybar for instant update)
+bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+8 waybar
 
 # Use Mouse+Mod4 (Super) to drag floating windows
 # Note: floating_modifier only accepts single modifiers, not combinations
@@ -224,6 +224,11 @@ workspace $WS7 output DP-1
 workspace $WS8 output DP-1
 workspace $WS0 output DP-2
 
+# Default to vertical split for portrait monitor workspaces
+workspace $WS5 layout splitv
+workspace $WS7 layout splitv
+workspace $WS8 layout splitv
+
 # Switch to workspace
 bindsym $mod+1 workspace $WS1
 bindsym $mod+2 workspace $WS2
@@ -331,6 +336,9 @@ default_border pixel 0
 default_floating_border normal 0
 hide_edge_borders none
 
+# Title bar padding (horizontal vertical)
+titlebar_padding 5 2
+
 # Gaps
 smart_borders on
 smart_gaps on
@@ -342,12 +350,11 @@ xwayland enable
 
 # ================= Input Configuration =================
 #
-# Example input configuration (uncomment and adjust as needed):
-# input type:keyboard {
-#     xkb_layout us
-#     xkb_variant ,nodeadkeys
-#     xkb_options grp:alt_shift_toggle
-# }
+# Keyboard configuration for US International (allows German umlauts on US keyboard)
+input type:keyboard {
+    xkb_layout us
+    xkb_variant altgr-intl
+}
 #
 # input type:touchpad {
 #     tap enabled
