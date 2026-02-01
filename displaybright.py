@@ -60,7 +60,7 @@ class SingleScreen():
 
     async def read_brightness(self):
         get_proc = await asyncio.create_subprocess_exec(
-            *["sudo", "ddcutil", "getvcp", "10", "--bus", str(self.i2c_bus)],
+            *["sudo", "ddcutil", "--skip-ddc-checks", "getvcp", "10", "--bus", str(self.i2c_bus)],
             stdout=asyncio.subprocess.PIPE,
         )
         c_brightness_str_stdout, _ = await get_proc.communicate()
@@ -77,7 +77,7 @@ class SingleScreen():
     async def set_brightness(self, value: int) -> None:
         while True:
             set_proc = await asyncio.create_subprocess_exec(
-                *["ddcutil", "setvcp", "10", "--bus", str(self.i2c_bus), str(value)]
+                *["ddcutil", "--skip-ddc-checks", "setvcp", "10", "--bus", str(self.i2c_bus), str(value)]
             )
             await set_proc.communicate()
             if set_proc.returncode == 0:
@@ -103,7 +103,7 @@ class SingleScreen():
                         DEV_MAC
                     ]
                 ],
-                "name": "Screen Controller Mainboot",
+                "name": "MainBoot",
                 "sa": "work_room",
                 "mf": "MainBoot",
             },
@@ -163,7 +163,7 @@ class SingleScreen():
 
 async def init_displays():
     detect_proc = await asyncio.create_subprocess_exec(
-        *["sudo", "ddcutil", "detect", "--async", "--sleep-multiplier=0.5"],
+        *["sudo", "ddcutil", "detect", "--sleep-multiplier=0.5"],
         stdout=asyncio.subprocess.PIPE,
     )
     disp_list, _ = await detect_proc.communicate()
