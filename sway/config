@@ -4,14 +4,21 @@
 
 # ================= Environment Variables =================
 
+# Qt/KDE theming
+set $qt_theme QT_QPA_PLATFORMTHEME=kde
+set $kde_session KDE_SESSION_VERSION=5
+
 # For screen sharing to work properly
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORMTHEME=kde KDE_SESSION_VERSION=5
 
 # ================= Startup applications =================
 
 # Notification daemon (mako is Wayland-native, but dunst also works)
 exec --no-startup-id mako
 # Alternative: exec --no-startup-id dunst
+
+# Clipboard manager - persists clipboard after apps close
+exec wl-clip-persist --clipboard regular
 
 # Network manager applet (runs via XWayland)
 exec --no-startup-id nm-applet
@@ -103,7 +110,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym XF86HomePage exec chromium --enable-features=UseOzonePlatform --ozone-platform=wayland
 
 # Application launcher (rofi with Wayland support)
-bindsym $mod+o exec "rofi -combi-modi run,window -show combi -modi combi -theme android_notification -sort -sorting-method fzf -matching fuzzy"
+bindsym $mod+o exec "rofi -combi-modi drun,window -show combi -modi combi"
 
 # Microphone mute toggle (send signal to waybar for instant update)
 bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+8 waybar
@@ -224,6 +231,14 @@ workspace $WS7 output DP-1
 workspace $WS8 output DP-1
 workspace $WS0 output DP-2
 
+# Default to tabbed layout for Chromium workspaces
+workspace $WS1 layout tabbed
+workspace $WS2 layout tabbed
+
+# Default to tabbed layout for Code workspaces
+workspace $WS3 layout tabbed
+workspace $WS4 layout tabbed
+
 # Default to vertical split for portrait monitor workspaces
 workspace $WS5 layout splitv
 workspace $WS7 layout splitv
@@ -292,10 +307,17 @@ bar {
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="task_dialog"] floating enable
 for_window [window_role="plugin_ui"] floating enable
+
+# Chrome/Chromium dialog positioning fixes
+for_window [app_id="chromium" window_type="dialog"] floating enable, move position center
+for_window [class="chromium" window_type="dialog"] floating enable, move position center
+for_window [class="Chromium" window_type="dialog"] floating enable, move position center
+for_window [class="Google-chrome" window_type="dialog"] floating enable, move position center
 for_window [title="Preferences$"] floating enable
 for_window [title="Menu Update"] floating enable
 for_window [title="___"] floating enable
 for_window [instance="Download"] floating enable
+
 
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="mpv"] floating enable

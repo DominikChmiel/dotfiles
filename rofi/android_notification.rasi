@@ -1,6 +1,6 @@
 * {
     selected-normal-foreground:  rgba ( 255, 255, 255, 100 % );
-    foreground:                  rgba ( 134, 136, 140, 100 % );
+    foreground:                  rgba ( 255, 255, 255, 100 % );
     normal-foreground:           @foreground;
     alternate-normal-background: rgba ( 33, 33, 33, 100 % );
     red:                         rgba ( 220, 50, 47, 100 % );
@@ -94,6 +94,15 @@ element.alternate.active {
     background-color: @alternate-active-background;
     text-color:       @alternate-active-foreground;
 }
+element-text {
+    background-color: inherit;
+    text-color:       inherit;
+    padding:          0px 0px 0px 8px;
+}
+element-icon {
+    background-color: inherit;
+    size:             1.2em;
+}
 scrollbar {
     width:        4px ;
     border:       0;
@@ -110,21 +119,22 @@ button.selected {
 }
 inputbar {
     spacing:    0;
-    text-color: @normal-foreground;
+    text-color: @foreground;
     padding:    1px ;
     children:  [ prompt, textbox-prompt-sep, entry, case-indicator ];
 }
 case-indicator {
     spacing:    0;
-    text-color: @normal-foreground;
+    text-color: @foreground;
 }
 entry {
     spacing:    0;
-    text-color: @normal-foreground;
+    text-color: @foreground;
+    placeholder-color: rgba ( 150, 150, 150, 100 % );
 }
 prompt, button {
     spacing:    0;
-    text-color: @normal-foreground;
+    text-color: @foreground;
 }
 textbox-prompt-sep {
     expand: false;

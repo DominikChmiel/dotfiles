@@ -96,6 +96,7 @@
             "car": "",
             "default": ["", "", ""]
         },
+        "scroll-step": 2,
         "on-click": "pavucontrol",
         "tooltip": true,
         "tooltip-format": "{desc}: {volume}%"
