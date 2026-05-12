@@ -8,7 +8,7 @@
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
     "modules-right": [
-        "mpris",
+        "custom/mpris",
         "pulseaudio",
         "custom/network",
         "cpu",
@@ -16,6 +16,7 @@
         "disk",
         "bluetooth",
         "custom/mic",
+        "custom/recording",
         "clock",
         "tray"
     ],
@@ -31,19 +32,12 @@
         "format": "<span style=\"italic\">{}</span>"
     },
 
-    "mpris": {
-        "format": "{player_icon}  {title} - {artist}",
-        "format-paused": "{status_icon}  {title} - {artist}",
-        "player-icons": {
-            "default": "",
-            "plasma-browser-integration": "",
-            "spotify": ""
-        },
-        "status-icons": {
-            "paused": ""
-        },
-        "max-length": 40,
-        "ignored-players": [],
+    "custom/mpris": {
+        "exec": "~/.config/waybar/scripts/mpris-status.py",
+        "return-type": "json",
+        "interval": 3,
+        "format": "{}",
+        "on-click": "playerctl play-pause",
         "on-click-middle": "playerctl play-pause"
     },
 
@@ -124,6 +118,15 @@
         "signal": 8,
         "format": "{}",
         "on-click": "pactl set-source-mute alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source toggle && pkill -RTMIN+8 waybar",
+        "tooltip": false
+    },
+
+    "custom/recording": {
+        "exec": "~/.config/waybar/scripts/recording-status.sh",
+        "return-type": "json",
+        "interval": 1,
+        "format": "{}",
+        "on-click": "~/.config/sway/toggle-recording.sh",
         "tooltip": false
     }
 }

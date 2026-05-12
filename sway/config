@@ -23,6 +23,9 @@ exec wl-clip-persist --clipboard regular
 # Network manager applet (runs via XWayland)
 exec --no-startup-id nm-applet
 
+# PolicyKit authentication agent (required for GUI password prompts)
+exec /usr/lib/polkit-kde-authentication-agent-1
+
 # Wallpaper - use swaybg or set in output config
 # TODO: Set your wallpaper path here
 # exec swaybg -i /path/to/wallpaper.jpg -m fill
@@ -192,6 +195,10 @@ bindsym $mod+a focus parent
 bindsym Print exec grim -g "$(slurp)" - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
 # Ctrl+Print: capture full screen and open in satty
 bindsym Ctrl+Print exec grim - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+
+# Screen recording using wf-recorder
+# Toggle recording (start/stop)
+bindsym $mod+r exec ~/.config/sway/toggle-recording.sh
 
 # Reload configuration
 bindsym $mod+c reload

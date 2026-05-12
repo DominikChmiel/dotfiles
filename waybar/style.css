@@ -59,9 +59,10 @@ window#waybar.hidden {
 #custom-network,
 #pulseaudio,
 #bluetooth,
-#mpris,
+#custom-mpris,
 #tray,
-#custom-mic {
+#custom-mic,
+#custom-recording {
     padding: 0 6px 0 10px;
     color: #F3F4F5;
     font-family: "FontAwesome", "Arial";
@@ -100,12 +101,18 @@ window#waybar.hidden {
     min-width: 16px;
 }
 
-#mpris {
-    color: #F3F4F5;
+#custom-recording {
+    min-width: 16px;
 }
 
-#mpris.paused {
+#custom-mpris {
+    color: #F3F4F5;
+    font-size: 12px;
+}
+
+#custom-mpris.paused {
     color: #999999;
+    font-size: 12px;
 }
 
 #cpu {
@@ -171,6 +178,18 @@ window#waybar.hidden {
 }
 
 #custom-mic.on {
+    color: #ff0000;
+}
+
+#custom-recording {
+    color: #F3F4F5;
+}
+
+#custom-recording.idle {
+    color: transparent;
+}
+
+#custom-recording.recording {
     color: #ff0000;
 }
 
