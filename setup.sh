@@ -142,6 +142,7 @@ setup_common() {
     [ ! -e ~/.nanorc ] && ln -sf "$DOTFILES_DIR/.nanorc" ~/.nanorc
     [ ! -e ~/.inputrc ] && ln -sf "$DOTFILES_DIR/.inputrc" ~/.inputrc
     [ ! -e ~/.dircolors ] && ln -sf "$DOTFILES_DIR/.dircolors" ~/.dircolors
+    [ ! -e ~/.direnvrc ] && ln -sf "$DOTFILES_DIR/.direnvrc" ~/.direnvrc
     [ ! -e ~/.face ] && ln -sf "$DOTFILES_DIR/.face" ~/.face
     [ ! -e ~/.face.icon ] && ln -sf "$DOTFILES_DIR/.face" ~/.face.icon
     [ ! -e ~/.tmux.conf ] && ln -sf "$DOTFILES_DIR/.tmux.conf" ~/.tmux.conf

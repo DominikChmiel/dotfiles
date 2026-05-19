@@ -85,9 +85,7 @@ alias g='git'
 #alias ssh='TERM=xterm-color ssh'
 
 alias gitk='gitk --all & disown'
-alias mp3-dl='youtube-dl --audio-quality 1 --extract-audio --audio-format mp3'
 alias timer='echo "Timer started. Stop with Ctrl-D." && date "+%a, %d %b %H:%M:%S" && time cat && date "+%a, %d %b %H:%M:%S"'
-alias logout='qdbus org.kde.ksmserver /KSMServer logout 0 3 3'
 
 alias nano="nano --smarthome --autoindent --linenumbers --mouse --historylog --trimblanks --nohelp" 
 
@@ -97,7 +95,6 @@ alias fuckthis='sudo systemctl suspend'
 #alias yup='yaourt -Syu --aur --noconfirm'
 #alias yup='bb-wrapper -Syu --aur --noconfirm --build-dir /tmp/bauberbill/ --ignore matlab --ignore gcc5'
 alias yup='pikaur -Syua --devel --needed --noconfirm'
-alias plyt='mpv --ytdl-format="bestvideo[height<=?1080]+bestaudio/best" $(xclip -o) & disown'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -246,8 +243,12 @@ PATH=$PATH:~/go/bin
 
 # Created by `userpath` on 2020-02-28 17:49:46
 export PATH="$PATH:~/.local/bin"
-export PATH="$PATH:~/.gem/ruby/3.0.0/bin"
-export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
+
+# Ruby gem binaries (any installed version)
+for d in ~/.local/share/gem/ruby/*/bin; do
+    [ -d "$d" ] && PATH="$PATH:$d"
+done
+unset d
 
 export PYTHONDONTWRITEBYTECODE=1
 
