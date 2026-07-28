@@ -4,13 +4,13 @@ from dataclasses import dataclass
 import os
 import json
 import asyncio
-import subprocess
 import pprint
-from dataclasses import dataclass, asdict
+
+main_loop: asyncio.AbstractEventLoop | None = None
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    client.publish(f"displays/status", "online")
+    client.publish("displays/status", "online")
 
     if client.displays:
         for d in client.displays:
@@ -21,8 +21,8 @@ def on_disconnect(client, userdata, rc):
 
 subs: dict[str, "SingleScreen"] = {}
 
-def on_message(client, userdata, msg):  # The callback for when a PUBLISH 
-    print("Message received-> " 
+def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received
+    print("Message received-> "
     + msg.topic + " " + str(msg.payload))  # Print a received msg
     if msg.topic in subs:
         subs[msg.topic].on_mqtt(msg.payload)
@@ -35,8 +35,8 @@ client.on_connect = on_connect
 client.on_disconnect = on_disconnect
 client.on_message = on_message
 client.will_set('displays/status', 'offline', 0, True)
+client.reconnect_delay_set(min_delay=1, max_delay=30)
 client.username_pw_set(os.environ["MQTT_USER"], os.environ["MQTT_PASSWORD"])
-client.connect(os.environ["MQTT_SERVER"], 1883, 60)
 
 async def get_device_mac() -> str:
     get_proc = await asyncio.create_subprocess_shell(
@@ -59,32 +59,36 @@ class SingleScreen():
     last_brightness: int = -1
 
     async def read_brightness(self):
-        get_proc = await asyncio.create_subprocess_exec(
-            *["sudo", "ddcutil", "--skip-ddc-checks", "getvcp", "10", "--bus", str(self.i2c_bus)],
-            stdout=asyncio.subprocess.PIPE,
-        )
-        c_brightness_str_stdout, _ = await get_proc.communicate()
-        c_brightness_str = (
-            c_brightness_str_stdout.decode()
-            .strip()
-            .replace(" value ", "")
-            .split(":")[1]
-            .split(",")
-        )
-        curr_value = int(c_brightness_str[0].split("=")[1].strip())
-        self.last_brightness = curr_value
+        try:
+            get_proc = await asyncio.create_subprocess_exec(
+                *["sudo", "ddcutil", "--skip-ddc-checks", "getvcp", "10", "--bus", str(self.i2c_bus)],
+                stdout=asyncio.subprocess.PIPE,
+            )
+            c_brightness_str_stdout, _ = await get_proc.communicate()
+            c_brightness_str = (
+                c_brightness_str_stdout.decode()
+                .strip()
+                .replace(" value ", "")
+                .split(":")[1]
+                .split(",")
+            )
+            curr_value = int(c_brightness_str[0].split("=")[1].strip())
+            self.last_brightness = curr_value
+        except Exception as e:
+            print(f"Failed to read brightness for display {self.number}: {e}")
 
-    async def set_brightness(self, value: int) -> None:
-        while True:
+    async def set_brightness(self, value: int, max_retries: int = 5) -> None:
+        for attempt in range(max_retries):
             set_proc = await asyncio.create_subprocess_exec(
                 *["ddcutil", "--skip-ddc-checks", "setvcp", "10", "--bus", str(self.i2c_bus), str(value)]
             )
             await set_proc.communicate()
             if set_proc.returncode == 0:
-                break
+                self.last_brightness = value
+                return
             await asyncio.sleep(0.5)
-            print(f"Retrying due to failure on {self.number} | {set_proc.returncode}")
-        self.last_brightness = value
+            print(f"Retrying due to failure on {self.number} | {set_proc.returncode} (attempt {attempt + 1}/{max_retries})")
+        print(f"Failed to set brightness on {self.number} after {max_retries} attempts")
 
     @property
     def set_topic(self):
@@ -107,7 +111,7 @@ class SingleScreen():
                 "sa": "work_room",
                 "mf": "MainBoot",
             },
-            "~": f"displays",
+            "~": "displays",
             "name": f"Display {self.name} brightness",
             "uniq_id": f"displays_{self.number}_brightness",
             "avty_t": "~/status",
@@ -123,7 +127,10 @@ class SingleScreen():
     def on_mqtt(self, msg):
         print(self.number, msg)
         new_target = int(msg)
-        asyncio.run(self.set_brightness(new_target))
+        asyncio.run_coroutine_threadsafe(self._set_and_update(new_target), main_loop)
+
+    async def _set_and_update(self, value: int):
+        await self.set_brightness(value)
         self.update()
 
     def update(self):
@@ -146,9 +153,6 @@ class SingleScreen():
         for line in lines:
             line = line.strip()
             if line.startswith("Display "):
-                assert "number" not in data
-                data["number"] = int(line.rsplit(" ", 1)[1])
-            if line.startswith("Display "):
                 data["number"] = int(line.rsplit(" ", 1)[1])
             if "I2C bus:" in line:
                 busname = line.split("I2C bus:")[1].strip().replace("/dev/i2c-", "")
@@ -169,7 +173,6 @@ async def init_displays():
     disp_list, _ = await detect_proc.communicate()
     specs = disp_list.decode().split("\n\n")
 
-    all_displays = []
     tasks = []
     for spec in specs:
         if spec.strip() and "Display" in spec:
@@ -188,8 +191,28 @@ async def init_displays():
 
 
 async def run_polling_loop():
-    client.displays = await init_displays()
+    global main_loop
+    main_loop = asyncio.get_running_loop()
+
+    while True:
+        try:
+            client.connect(os.environ["MQTT_SERVER"], 1883, 60)
+            break
+        except Exception as e:
+            print(f"MQTT connect failed: {e}, retrying in 5s...")
+            await asyncio.sleep(5)
     client.loop_start()
+
+    while True:
+        try:
+            client.displays = await init_displays()
+            if client.displays:
+                break
+            print("No displays found, retrying in 10s...")
+        except Exception as e:
+            print(f"Display init failed: {e}, retrying in 10s...")
+        await asyncio.sleep(10)
+
     try:
         last_update = time.time()
         while True:
