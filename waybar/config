@@ -16,6 +16,8 @@
         "disk",
         "bluetooth",
         "custom/mic",
+        "custom/recording",
+        "custom/claude",
         "clock",
         "tray"
     ],
@@ -124,5 +126,23 @@
         "format": "{}",
         "on-click": "pactl set-source-mute alsa_input.usb-Focusrite_Scarlett_2i4_USB-00.HiFi__Mic1__source toggle && pkill -RTMIN+8 waybar",
         "tooltip": false
+    },
+
+    "custom/recording": {
+        "exec": "~/.config/waybar/scripts/recording-status.sh",
+        "return-type": "json",
+        "interval": 1,
+        "format": "{}",
+        "on-click": "~/.config/sway/toggle-recording.sh",
+        "tooltip": false
+    },
+
+    "custom/claude": {
+        "exec": "claudebar --format '{icon}  {session_pct}% · {session_reset}' --tooltip-pace-pts",
+        "return-type": "json",
+        "interval": 300,
+        "format": "{}",
+        "markup": true,
+        "on-click": "xdg-open https://claude.ai/settings/usage"
     }
 }

@@ -62,12 +62,26 @@ window#waybar.hidden {
 #mpris,
 #tray,
 #custom-mic {
+#custom-mic,
+#custom-recording,
+#custom-claude {
     padding: 0 6px 0 10px;
     color: #F3F4F5;
     font-family: "FontAwesome", "Arial";
     border-left: 2px solid rgba(255, 255, 255, 0.3);
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+/* claude-code usage (claudebar). The widget colors its own text via Pango
+   spans, so the severity classes only tint the icon/background here. */
+#custom-claude {
+    font-family: "SFMono Nerd Font Mono", "FontAwesome", monospace;
+    min-width: 110px;
+}
+
+#custom-claude.critical {
+    background-color: rgba(224, 108, 117, 0.20);
 }
 
 #clock {
