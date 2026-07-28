@@ -16,6 +16,9 @@ def on_connect(client, userdata, flags, rc):
         for d in client.displays:
             d.connect_mqtt()
 
+    if client.lock_sensor:
+        client.lock_sensor.connect_mqtt()
+
 def on_disconnect(client, userdata, rc):
     print("Device disconnected with result code: " + str(rc))
 
@@ -30,6 +33,7 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
 client = mqtt.Client()
 
 client.displays = []
+client.lock_sensor = None
 
 client.on_connect = on_connect
 client.on_disconnect = on_disconnect
@@ -49,6 +53,26 @@ async def get_device_mac() -> str:
 
 DEV_MAC = asyncio.run(get_device_mac())
 print("Starting on device " + DEV_MAC)
+
+
+async def run_capture(args: list[str]) -> tuple[int, str]:
+    proc = await asyncio.create_subprocess_exec(
+        *args,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    stdout, _ = await proc.communicate()
+    return proc.returncode, stdout.decode().strip()
+
+
+def ensure_session_bus():
+    """systemd --user exports the session bus for us, other session managers may not."""
+    if os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
+        return
+    bus = os.path.join(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"), "bus")
+    if os.path.exists(bus):
+        os.environ["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={bus}"
+        print(f"DBUS_SESSION_BUS_ADDRESS was unset, using {bus}")
 
 @dataclass()
 class SingleScreen():
@@ -190,6 +214,201 @@ async def init_displays():
     return all_displays
 
 
+LOCK_POLL_INTERVAL = 5
+
+# Session bus screensaver interfaces, in probe order. Plasma owns
+# org.freedesktop.ScreenSaver, the rest cover the other desktops.
+SCREENSAVER_TARGETS = [
+    ("org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver"),
+    ("org.freedesktop.ScreenSaver", "/org/freedesktop/ScreenSaver", "org.freedesktop.ScreenSaver"),
+    ("org.gnome.ScreenSaver", "/org/gnome/ScreenSaver", "org.gnome.ScreenSaver"),
+    ("org.cinnamon.ScreenSaver", "/org/cinnamon/ScreenSaver", "org.cinnamon.ScreenSaver"),
+    ("org.xfce.ScreenSaver", "/org/xfce/ScreenSaver", "org.xfce.ScreenSaver"),
+    ("org.mate.ScreenSaver", "/org/mate/ScreenSaver", "org.mate.ScreenSaver"),
+]
+
+# Processes that only exist while the screen is locked. Lockers that keep a
+# daemon running while unlocked (xscreensaver, light-locker) must not be listed.
+LOCKER_PROCESSES = [
+    "swaylock",
+    "hyprlock",
+    "waylock",
+    "gtklock",
+    "i3lock",
+    "xsecurelock",
+    "slock",
+    "xtrlock",
+    "physlock",
+]
+
+
+class LockSensor():
+    """Publishes whether the graphical session is locked.
+
+    Asks whoever can answer, most reliable first: the screensaver D-Bus
+    interface (Plasma and every other desktop implementing it), then logind's
+    LockedHint (swaylock, GNOME, anything locked via `loginctl lock-session`),
+    then the presence of a bare locker process (i3lock & friends, which report
+    nowhere else). D-Bus is authoritative when present; the other two can only
+    ever raise "locked", since a session where nothing sets LockedHint looks
+    identical to an unlocked one.
+    """
+
+    def __init__(self):
+        self.locked: bool | None = None
+        self.source: str | None = None
+        self.dbus_target: tuple[str, str, str] | None = None
+        self.session_id: str | None = None
+
+    async def dbus_active(self) -> bool | None:
+        targets = SCREENSAVER_TARGETS
+        if self.dbus_target:
+            targets = [self.dbus_target] + [t for t in targets if t != self.dbus_target]
+
+        for target in targets:
+            dest, path, iface = target
+            rc, out = await run_capture([
+                "gdbus", "call", "--session", "--dest", dest,
+                "--object-path", path, "--method", f"{iface}.GetActive",
+            ])
+            if rc == 0 and ("true" in out or "false" in out):
+                self.dbus_target = target
+                return "true" in out
+
+        self.dbus_target = None
+        return None
+
+    async def logind_session(self) -> str | None:
+        if self.session_id:
+            return self.session_id
+        # A systemd --user service has no XDG_SESSION_ID of its own, so ask
+        # logind for the graphical session of this user first.
+        rc, out = await run_capture(["loginctl", "show-user", str(os.getuid()), "-p", "Display", "--value"])
+        self.session_id = out if rc == 0 and out else os.environ.get("XDG_SESSION_ID")
+        return self.session_id
+
+    async def logind_locked_hint(self) -> bool | None:
+        session = await self.logind_session()
+        if not session:
+            return None
+        rc, out = await run_capture(["loginctl", "show-session", session, "-p", "LockedHint", "--value"])
+        if rc != 0:
+            self.session_id = None  # session went away, re-resolve next time
+            return None
+        return out == "yes" if out in ("yes", "no") else None
+
+    async def locker_process_running(self) -> bool | None:
+        rc, _ = await run_capture(["pgrep", "-x", "-u", str(os.getuid()), "|".join(LOCKER_PROCESSES)])
+        return rc == 0 if rc in (0, 1) else None
+
+    async def read(self) -> None:
+        try:
+            active = await self.dbus_active()
+            if active is not None:
+                self.record(active, f"dbus:{self.dbus_target[0]}")
+                return
+
+            hint = await self.logind_locked_hint()
+            if hint:
+                self.record(True, "logind")
+                return
+
+            running = await self.locker_process_running()
+            if running:
+                self.record(True, "process")
+                return
+
+            if hint is False:
+                self.record(False, "logind")
+            elif running is False:
+                self.record(False, "process")
+            else:
+                self.record(None, None)
+        except Exception as e:
+            print(f"Failed to read lock state: {e}")
+
+    def record(self, locked: bool | None, source: str | None) -> None:
+        if (locked, source) != (self.locked, self.source):
+            print(f"Session lock state: {locked} (via {source})")
+        self.locked = locked
+        self.source = source
+
+    @property
+    def state_topic(self):
+        return "displays/session/locked"
+
+    @property
+    def discovery_json(self):
+        return {
+            "dev": {
+                "ids": [
+                    "session"
+                ],
+                "cns": [
+                    [
+                        "mac",
+                        DEV_MAC
+                    ]
+                ],
+                "name": "MainBoot",
+                "sa": "work_room",
+                "mf": "MainBoot",
+            },
+            "~": "displays",
+            "name": "Session locked",
+            "uniq_id": "displays_session_locked",
+            "avty_t": "~/status",
+            "stat_t": "~/session/locked",
+            "dev_cla": "lock",
+            # HA reads a lock binary_sensor as "on == open", hence the inversion
+            "pl_on": "unlocked",
+            "pl_off": "locked",
+        }
+
+    def update(self):
+        if self.locked is None:
+            return
+        client.publish(self.state_topic, "locked" if self.locked else "unlocked")
+
+    def connect_mqtt(self):
+        client.publish("homeassistant/binary_sensor/session/lock/config", json.dumps(self.discovery_json))
+        self.update()
+
+    async def poll_loop(self):
+        while True:
+            await self.read()
+            self.update()
+            await asyncio.sleep(LOCK_POLL_INTERVAL)
+
+    async def watch(self):
+        """Push updates for D-Bus sessions, so locking shows up without waiting
+        for the next poll. Every other session type relies on polling alone."""
+        while True:
+            if not self.dbus_target:
+                await asyncio.sleep(LOCK_POLL_INTERVAL)
+                continue
+
+            dest = self.dbus_target[0]
+            monitor = await asyncio.create_subprocess_exec(
+                *["gdbus", "monitor", "--session", "--dest", dest],
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.DEVNULL,
+            )
+            print(f"Watching {dest} for lock changes")
+            try:
+                async for line in monitor.stdout:
+                    if b"Changed" in line:
+                        await self.read()
+                        self.update()
+            finally:
+                try:
+                    monitor.terminate()
+                except ProcessLookupError:
+                    pass
+            print(f"{dest} monitor exited, restarting in {LOCK_POLL_INTERVAL}s")
+            await asyncio.sleep(LOCK_POLL_INTERVAL)
+
+
 async def run_polling_loop():
     global main_loop
     main_loop = asyncio.get_running_loop()
@@ -203,17 +422,27 @@ async def run_polling_loop():
             await asyncio.sleep(5)
     client.loop_start()
 
-    while True:
-        try:
-            client.displays = await init_displays()
-            if client.displays:
-                break
-            print("No displays found, retrying in 10s...")
-        except Exception as e:
-            print(f"Display init failed: {e}, retrying in 10s...")
-        await asyncio.sleep(10)
+    # Announced before display detection, which may keep retrying for a while
+    ensure_session_bus()
+    client.lock_sensor = LockSensor()
+    await client.lock_sensor.read()
+    client.lock_sensor.connect_mqtt()
+    lock_tasks = [
+        asyncio.create_task(client.lock_sensor.poll_loop()),
+        asyncio.create_task(client.lock_sensor.watch()),
+    ]
 
     try:
+        while True:
+            try:
+                client.displays = await init_displays()
+                if client.displays:
+                    break
+                print("No displays found, retrying in 10s...")
+            except Exception as e:
+                print(f"Display init failed: {e}, retrying in 10s...")
+            await asyncio.sleep(10)
+
         last_update = time.time()
         while True:
             await asyncio.sleep(5)
@@ -225,8 +454,11 @@ async def run_polling_loop():
             for d in client.displays:
                 d.update()
     finally:
+        for task in lock_tasks:
+            task.cancel()
         for d in client.displays:
             d.set_offline()
         client.loop_stop()
 
-asyncio.run(run_polling_loop())
+if __name__ == "__main__":
+    asyncio.run(run_polling_loop())
