@@ -8,7 +8,9 @@ export XDG_CURRENT_DESKTOP=sway
 # Qt applications
 export QT_QPA_PLATFORM=wayland
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-export QT_QPA_PLATFORMTHEME=qt5ct
+# Use the installed KDE platform-theme plugin (qt5ct is not installed here);
+# this makes KDE apps read ~/.config/kdeglobals. Kept in sync with .bashrc-wayland.
+export QT_QPA_PLATFORMTHEME=kde
 
 # Firefox/Mozilla
 export MOZ_ENABLE_WAYLAND=1

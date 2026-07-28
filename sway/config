@@ -4,8 +4,9 @@
 
 # ================= Environment Variables =================
 
-# For screen sharing to work properly
-exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+# Propagate the session env to dbus/systemd so dbus-activated GUI apps
+# (Dolphin and other KDE/Qt apps) get Wayland + KDE platform-theme integration.
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORM QT_QPA_PLATFORMTHEME
 
 # ================= Startup applications =================
 

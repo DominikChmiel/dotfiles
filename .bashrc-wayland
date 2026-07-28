@@ -5,6 +5,9 @@
 export XDG_SESSION_TYPE=wayland
 export XDG_CURRENT_DESKTOP=sway
 export QT_QPA_PLATFORM=wayland
+# Use the installed KDEPlasmaPlatformTheme plugin so KDE apps (Dolphin, etc.)
+# read ~/.config/kdeglobals for colors/fonts/icons outside a Plasma session.
+export QT_QPA_PLATFORMTHEME=kde
 export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
 export MOZ_ENABLE_WAYLAND=1
 export MOZ_DBUS_REMOTE=1
