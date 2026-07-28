@@ -10,7 +10,8 @@ main_loop: asyncio.AbstractEventLoop | None = None
 
 def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
-    client.publish("displays/status", "online")
+    # Retained, so it overwrites the retained offline our last will leaves behind
+    client.publish("displays/status", "online", retain=True)
 
     if client.displays:
         for d in client.displays:
@@ -165,9 +166,6 @@ class SingleScreen():
         client.subscribe(self.set_topic)
         subs[self.set_topic] = self
         client.publish(f"homeassistant/number/screen_{self.number}/brightness/config", json.dumps(self.discovery_json))
-
-    def set_offline(self):
-        client.publish(f"displays/{self.number}/status", "offline")
 
     @staticmethod
     async def from_output(output: str) -> "SingleScreen":
@@ -456,8 +454,6 @@ async def run_polling_loop():
     finally:
         for task in lock_tasks:
             task.cancel()
-        for d in client.displays:
-            d.set_offline()
         client.loop_stop()
 
 if __name__ == "__main__":
