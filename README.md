@@ -98,7 +98,6 @@ dotfiles/
 ├── powerline/               # Powerline themes
 ├── .bashrc                  # Main bash configuration
 ├── .bashrc-wayland          # Wayland-specific env vars
-├── .profile-wayland         # Wayland session startup
 ├── .Xresources              # X11 terminal colors
 ├── picom.conf               # X11 compositor
 ├── dunstrc                  # Notification daemon (X11)

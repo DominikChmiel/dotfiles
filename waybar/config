@@ -8,7 +8,7 @@
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": [],
     "modules-right": [
-        "mpris",
+        "custom/mpris",
         "pulseaudio",
         "custom/network",
         "cpu",
@@ -33,19 +33,12 @@
         "format": "<span style=\"italic\">{}</span>"
     },
 
-    "mpris": {
-        "format": "{player_icon}  {title} - {artist}",
-        "format-paused": "{status_icon}  {title} - {artist}",
-        "player-icons": {
-            "default": "",
-            "plasma-browser-integration": "",
-            "spotify": ""
-        },
-        "status-icons": {
-            "paused": ""
-        },
-        "max-length": 40,
-        "ignored-players": [],
+    "custom/mpris": {
+        "exec": "~/.config/waybar/scripts/mpris-status.py",
+        "return-type": "json",
+        "interval": 3,
+        "format": "{}",
+        "on-click": "playerctl play-pause",
         "on-click-middle": "playerctl play-pause"
     },
 
@@ -98,6 +91,7 @@
             "car": "",
             "default": ["", "", ""]
         },
+        "scroll-step": 2,
         "on-click": "pavucontrol",
         "tooltip": true,
         "tooltip-format": "{desc}: {volume}%"

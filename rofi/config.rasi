@@ -1,0 +1,29 @@
+configuration {
+    /* Enable icons for applications */
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+
+    /* Display settings - no trailing colon, theme will add it */
+    display-drun: "Applications";
+    display-run: "Run";
+    display-window: "Windows";
+    display-combi: "Search";
+
+    /* Application launcher settings */
+    drun-display-format: "{icon} {name}";
+
+    /* Sort and match settings */
+    sort: true;
+    sorting-method: "fzf";
+    matching: "fuzzy";
+
+    /* Performance */
+    drun-match-fields: "name,generic,exec,categories,keywords";
+
+    /* Keybindings - use Ctrl+Space to switch modes */
+    kb-mode-next: "Shift+Right,Control+Tab";
+    kb-mode-previous: "Shift+Left,Control+ISO_Left_Tab";
+}
+
+/* Theme */
+@theme "android_notification"

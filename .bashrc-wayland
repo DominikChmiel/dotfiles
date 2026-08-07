@@ -41,18 +41,12 @@ alias xclip='wl-copy'
 alias xclip-o='wl-paste'
 alias xsel='wl-paste'
 
-# Update existing aliases to use Wayland-native tools
-alias plyt='mpv --wayland-app-id=mpv $(wl-paste) & disown'
-
 # Update chromium/browser to use Wayland
 alias chromium='chromium --enable-features=UseOzonePlatform --ozone-platform=wayland'
 
 # Screenshot aliases
 alias screenshot='grim ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png'
 alias screenshot-area='grim -g "$(slurp)" ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png'
-
-# Logout alias for Sway (instead of KDE)
-alias logout='swaymsg exit'
 
 # Helper to identify current session type
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
