@@ -10,6 +10,12 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 
 # ================= Startup applications =================
 
+# Clipboard persistence. Wayland has no clipboard storage: the source app owns
+# the selection and serves it on demand, so copied data dies when that app exits.
+# wl-clip-persist takes ownership of the selection so it survives the source
+# closing (screenshots from satty, snippets from a terminal you then close, ...).
+exec --no-startup-id wl-clip-persist --clipboard regular
+
 # Notification daemon (mako is Wayland-native, but dunst also works)
 exec --no-startup-id mako
 # Alternative: exec --no-startup-id dunst
@@ -183,9 +189,15 @@ bindsym $mod+a focus parent
 
 # Screenshot using grim + slurp + satty (Wayland-native flameshot alternative)
 # Print: capture selection and open in satty for annotation/save/copy
-bindsym Print exec grim -g "$(slurp)" - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+# --copy-command wl-copy hands the selection to wl-copy's forked helper rather than
+# satty's own short-lived data source; wl-clip-persist (see top) then keeps it alive
+bindsym Print exec grim -g "$(slurp)" - | satty --filename - --fullscreen --copy-command wl-copy --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
 # Ctrl+Print: capture full screen and open in satty
-bindsym Ctrl+Print exec grim - | satty --filename - --fullscreen --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+bindsym Ctrl+Print exec grim - | satty --filename - --fullscreen --copy-command wl-copy --output-filename ~/Pictures/screenshot-$(date +%Y%m%d-%H%M%S).png
+
+# Screen recording using wf-recorder
+# Toggle recording (start/stop) - prompts for a region via slurp on start
+bindsym $mod+r exec ~/.config/sway/toggle-recording.sh
 
 # Reload configuration
 bindsym $mod+c reload
