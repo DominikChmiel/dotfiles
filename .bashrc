@@ -271,3 +271,5 @@ export BROWSER=/bin/chromium
 if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     source ~/.bashrc-wayland
 fi
+
+. "$HOME/.local/bin/env"
