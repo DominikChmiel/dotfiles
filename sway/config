@@ -17,6 +17,12 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 # closing (screenshots from satty, snippets from a terminal you then close, ...).
 exec --no-startup-id wl-clip-persist --clipboard regular
 
+# Chromium window placement. Chromium restores its own windows and tabs, but
+# Wayland has no session management, so the compositor drops them all on
+# whatever workspace is focused at launch. This daemon records which workspace
+# each Chromium window sits on and puts them back on the next start.
+exec_always --no-startup-id ~/.config/sway/chrome-workspaces.sh daemon
+
 # Notification daemon (mako is Wayland-native, but dunst also works)
 exec --no-startup-id mako
 # Alternative: exec --no-startup-id dunst
@@ -337,10 +343,24 @@ for_window [class="Pavucontrol"] floating enable
 for_window [class="mpv"] floating enable; move absolute position 640px 764px
 
 # Workspace assignments
+
+# Editors always open on the Code workspace. `assign` places the window before
+# it is mapped, so it never flashes on the workspace you launched it from and
+# never pulls focus away from it - use $mod+3 to follow it over.
+assign [app_id="^code$"] $WS3
+assign [app_id="^sublime_merge$"] $WS3
+# XWayland fallbacks, for when either is started without the Wayland backend
+assign [class="^Code$"] $WS3
+assign [class="^Sublime_merge$"] $WS3
+
 for_window [class="automaited-native"] move container to workspace $WS9
 for_window [class="chromium (aiConomix)"] move container to workspace $WS9
-for_window [class="Microsoft Teams"] move container to workspace $WS8
-for_window [class="firefox"] move container to workspace $WS7
+# Teams and Firefox each have a home workspace. Both run natively on Wayland
+# now, so they are matched by app_id - the old class= rules only ever matched
+# XWayland and silently stopped firing. The title scope keeps the rule on the
+# main window: a screen-share picker or a file dialog stays where you opened it.
+for_window [app_id="^com\.github\.IsmaelMartinez\.teams_for_linux$" title="Microsoft Teams$"] move container to workspace $WS8
+for_window [app_id="^(firefox|org\.mozilla\.firefox)$" title="Mozilla Firefox( Private Browsing)?$"] move container to workspace $WS7
 for_window [title="Microsoft Teams Notification"] floating enable
 for_window [title="Microsoft Teams-Benachrichtigung"] floating enable
 

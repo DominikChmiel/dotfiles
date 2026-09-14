@@ -86,7 +86,9 @@ dotfiles/
 │   ├── i3blocks.conf        # Status bar config
 │   └── i3blocks-nomedia.conf
 ├── sway/                    # Sway window manager config
-│   └── config               # Main Sway config
+│   ├── config               # Main Sway config
+│   ├── chrome-workspaces.sh # Saves/restores Chromium window placement
+│   └── toggle-recording.sh  # wf-recorder start/stop toggle
 ├── waybar/                  # Waybar status bar
 │   ├── config               # Waybar config (JSON)
 │   ├── style.css            # Waybar styling
@@ -198,6 +200,29 @@ Persistent workspaces with icons:
 8. Teams
 9. General
 10. Mail
+
+#### Window placement (Sway)
+
+VS Code and Sublime Merge are assigned to workspace 3 (Code). They open there
+without pulling focus off the workspace you launched them from - press
+`$mod+3` to follow.
+
+Chromium windows go back to the workspace they were on before. Chromium itself
+restores the windows and tabs ("Continue where you left off"), but Wayland has
+no session management, so sway would otherwise drop every restored window onto
+whichever workspace happened to be focused. `sway/chrome-workspaces.sh` runs as
+a daemon (started via `exec_always`), snapshots "window title -> workspace"
+while Chromium runs, and replays it the next time Chromium starts. Matching is
+by window title, since Chromium has no stable window ids across restarts.
+
+```bash
+# Snapshot lives here
+~/.local/state/sway/chromium-workspaces.json
+
+~/.config/sway/chrome-workspaces.sh status    # show the snapshot + daemon state
+~/.config/sway/chrome-workspaces.sh save      # snapshot now
+~/.config/sway/chrome-workspaces.sh restore   # re-apply the snapshot now
+```
 
 ### Environment Variables (Wayland)
 
