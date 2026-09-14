@@ -94,7 +94,7 @@ def ago: if . == null then "?" else ($now - .) as $d
       elif $d < 3600  then "\(($d / 60) | floor)m"
       elif $d < 86400 then "\(($d / 3600) | floor)h"
       else                 "\(($d / 86400) | floor)d" end end;
-.[] | "\(.state | glyph) \(.name)  ·  \(.last | ago)  ·  \(.cwd | short) [\(.entry)]"')
+.[] | "\(.state | glyph) \(.name)  ·  \(.last | ago)  ·  \(if .title == "" then "—" else .title end)  ·  \(.cwd | short) [\(.entry)]"')
 
     idx=$(printf '%s\n' "$menu" | rofi -dmenu -i -p "Claude" -format i "${theme[@]}")
     [ -n "$idx" ] || exit 0

@@ -14,16 +14,46 @@
 # claude-sessions-focus.sh (focuses a session's window).
 
 CLAUDE_SESSIONS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/sessions"
+CLAUDE_PROJECTS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects"
 CLAUDE_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 CLAUDE_STATE_DIR="$CLAUDE_RUNTIME_DIR/claude-sessions"
 CLAUDE_SIGNAL=9
 
+# The conversation title /resume shows. Claude Code appends it to the session
+# transcript as {"type":"ai-title","aiTitle":...,"sessionId":...} and rewrites
+# it as the conversation moves on, so the last one wins -- hence reading the
+# file backwards and stopping at the first hit rather than parsing megabytes.
+# Emits a {sessionId: title} object.
+claude_session_titles() {
+    local sid f lines
+
+    lines=$(for sid in "$@"; do
+        for f in "$CLAUDE_PROJECTS_DIR"/*/"$sid".jsonl; do
+            [ -e "$f" ] || continue
+            tac "$f" 2>/dev/null | grep -m1 -F '"type":"ai-title"'
+            break
+        done
+    done)
+
+    if [ -z "$lines" ]; then
+        echo '{}'
+        return
+    fi
+
+    # The matched lines carry their own sessionId, so jq can index them
+    # directly -- and unescape the title properly while it is at it.
+    printf '%s\n' "$lines" \
+        | jq -s 'map(select(.aiTitle and .sessionId) | {(.sessionId): .aiTitle})
+                 | add // {}' 2>/dev/null \
+        || echo '{}'
+}
+
 # Emits a JSON array, sorted by urgency then name:
-#   [{pid, sessionId, name, cwd, entry, state, last}]
+#   [{pid, sessionId, name, title, cwd, entry, state, last}]
 # where `state` is waiting|busy|idle|unknown and `last` is an epoch-seconds
 # timestamp for when that state was last observed.
 claude_sessions_json() {
-    local live_files=() live_sids=() f sf pid sid states
+    local live_files=() live_sids=() f sf pid sid states titles
 
     for f in "$CLAUDE_SESSIONS_DIR"/*.json; do
         [ -e "$f" ] || continue
@@ -56,7 +86,10 @@ claude_sessions_json() {
     fi
     [ -n "$states" ] || states='{}'
 
-    jq -s -c --argjson states "$states" '
+    titles=$(claude_session_titles "${live_sids[@]}")
+    [ -n "$titles" ] || titles='{}'
+
+    jq -s -c --argjson states "$states" --argjson titles "$titles" '
 def rank: {"waiting": 0, "busy": 1, "idle": 2, "unknown": 3}[.] // 3;
 # Registry timestamps are epoch ms, hook timestamps epoch seconds.
 def secs: if . == null then null elif . > 1e12 then (. / 1000 | floor) else floor end;
@@ -68,6 +101,7 @@ def secs: if . == null then null elif . > 1e12 then (. / 1000 | floor) else floo
       pid: $r.pid,
       sessionId: ($r.sessionId // ""),
       name: ($r.name // "session"),
+      title: ($titles[$r.sessionId // ""] // ""),
       cwd: ($r.cwd // "?"),
       entry: ({"cli": "term", "claude-vscode": "vscode"}[$r.entrypoint // ""]
               // ($r.entrypoint // "?")),

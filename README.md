@@ -82,11 +82,20 @@ session at a glance — terminal and VSCode-hosted, across all projects:
 
 Red means at least one session is blocked on a permission prompt, and the age
 next to it is how long it has been waiting. Hover for the full list — state,
-name, last-active age, working directory, terminal vs. VSCode.
+name, last-active age, the conversation title `/resume` shows, working
+directory, terminal vs. VSCode:
+
+```
+▸ dotfiles-ec            2m  Claude-code agents overview in swaybar   ~/projects/dotfiles  [term]
+· cassistant-ledger-77   3h  Deployment gate design review            ~/code/cassistant-ledger  [vscode]
+· cassistant-ledger-82   3h  CI failures                              ~/code/cassistant-ledger  [vscode]
+```
+
+The title is what makes five sessions in the same project tellable apart.
 
 | Click | Action |
 |-------|--------|
-| Left | rofi picker over all sessions; focuses the window of the one you choose |
+| Left | rofi picker over all sessions (with titles); focuses the window of the one you choose |
 | Right | jump straight to the session that most wants attention (longest-blocked, else longest-running, else most recent) |
 | Middle | open `claude agents` in a terminal |
 
@@ -104,6 +113,11 @@ How it works:
 - **Updates** — event-driven. Each hook fires `pkill -RTMIN+9 waybar`, so the
   bar updates the moment a session changes. The 60 s `interval` is only a
   safety net for sessions killed without firing `SessionEnd`.
+- **Titles** — Claude Code appends the `/resume` conversation title to the
+  session transcript as `{"type":"ai-title",...}` and rewrites it as the
+  conversation moves on, so the last entry wins. The lookup reads the
+  transcript backwards and stops at the first hit rather than parsing
+  megabytes: ~40 ms for a dozen sessions, so no cache is needed.
 - **Focus** — `waybar/scripts/claude-sessions-focus.sh` walks the process
   ancestry from the session's PID until it hits a PID sway knows as a window.
   For a terminal that lands exactly on the emulator. Every VSCode window shares

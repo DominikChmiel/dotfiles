@@ -27,6 +27,10 @@ def pad($n): . as $s | $s + (($n - ($s | length)) as $d
     | if $d > 0 then " " * $d else "" end);
 def lpad($n): . as $s | (($n - ($s | length)) as $d
     | if $d > 0 then " " * $d else "" end) + $s;
+def trunc($n): if length > $n then .[0:$n - 1] + "…" else . end;
+# The /resume conversation title, or a dash for a session that has not
+# earned one yet (no prompt sent, so no transcript).
+def summary: (if . == "" then "—" else . end) | trunc(44);
 def ago: if . == null then "?" else ($now - .) as $d
     | if   $d < 60    then "\($d)s"
       elif $d < 3600  then "\(($d / 60) | floor)m"
@@ -41,6 +45,7 @@ def ago: if . == null then "?" else ($now - .) as $d
 | ($n - $w - $b) as $i
 | ($all | map(.name | length) | max) as $nw
 | ($all | map(.last | ago | length) | max) as $aw
+| ($all | map(.title | summary | length) | max) as $tw
 # How long the longest-blocked session has been waiting.
 | ($waiting | map(.last | select(. != null)) | min) as $oldest
 | {
@@ -57,6 +62,7 @@ def ago: if . == null then "?" else ($now - .) as $d
       + " · \($w) waiting, \($b) busy, \($i) idle\n<tt>"
       + ($all | map(
           "\(.state | glyph) \(.name | esc | pad($nw))  \(.last | ago | lpad($aw))"
+          + "  \(.title | summary | esc | pad($tw))"
           + "  \(.cwd | short | esc)  [\(.entry | esc)]"
         ) | join("\n"))
       + "</tt>\n<i>click: pick a session · right-click: jump to the urgent one</i>"),
