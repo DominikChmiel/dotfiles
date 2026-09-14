@@ -99,6 +99,10 @@ The title is what makes five sessions in the same project tellable apart.
 | Right | jump straight to the session that most wants attention (longest-blocked, else longest-running, else most recent) |
 | Middle | open `claude agents` in a terminal |
 
+`$mod+i` opens the same picker from the keyboard, sitting next to the `$mod+o`
+launcher. It is a Sway binding only — focusing a session goes through `swaymsg`, so it has no
+meaning under i3.
+
 How it works:
 
 - **Roster** — `waybar/scripts/claude-sessions-lib.sh` reads Claude Code's own
@@ -248,6 +252,7 @@ All keybindings are identical between i3 and Sway:
 | Workspaces | `$mod+[1-0]` |
 | Move to workspace | `$meh+[1-0]` |
 | File manager | `$mod+e` |
+| Claude session picker (Sway only) | `$mod+i` |
 | Screenshot | `Print` |
 | Volume up/down | `XF86AudioRaiseVolume/LowerVolume` |
 | Brightness up/down | `XF86MonBrightnessUp/Down` |

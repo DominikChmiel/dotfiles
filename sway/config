@@ -122,6 +122,9 @@ bindsym XF86HomePage exec chromium --enable-features=UseOzonePlatform --ozone-pl
 # Application launcher (rofi with Wayland support)
 bindsym $mod+o exec "rofi -combi-modi drun,window -show combi -modi combi"
 
+# Claude Code session picker (same dialog as clicking the waybar widget)
+bindsym $mod+i exec ~/.config/waybar/scripts/claude-sessions-focus.sh
+
 # Microphone mute toggle (send signal to waybar for instant update)
 bindsym $mod+m exec pactl set-source-mute $mic toggle && pkill -RTMIN+8 waybar
 
