@@ -71,10 +71,57 @@ sudo pacman -S i3-wm i3blocks dunst nitrogen rofi picom rxvt-unicode
 **Keybindings**: Identical to i3 setup
 **Mode**: Standalone (no DE integration)
 
+#### Claude Code session overview
+
+The `custom/claude-sessions` Waybar module shows every running Claude Code
+session at a glance — terminal and VSCode-hosted, across all projects:
+
+```
+󰚩  ! 1 3m  ▸ 2  ○ 9   # 1 blocked on you for 3 min, 2 working, 9 idle
+```
+
+Red means at least one session is blocked on a permission prompt, and the age
+next to it is how long it has been waiting. Hover for the full list — state,
+name, last-active age, working directory, terminal vs. VSCode.
+
+| Click | Action |
+|-------|--------|
+| Left | rofi picker over all sessions; focuses the window of the one you choose |
+| Right | jump straight to the session that most wants attention (longest-blocked, else longest-running, else most recent) |
+| Middle | open `claude agents` in a terminal |
+
+How it works:
+
+- **Roster** — `waybar/scripts/claude-sessions-lib.sh` reads Claude Code's own
+  session registry at `~/.claude/sessions/<pid>.json`, filtered to PIDs that
+  are still alive. No per-project setup, and sessions started before the module
+  existed still show up.
+- **State** — the registry only carries a `status` field for terminal sessions,
+  so `waybar/scripts/claude-sessions-state.sh` is wired in as a Claude Code hook
+  and writes `$XDG_RUNTIME_DIR/claude-sessions/<session-id>.json` on every state
+  change. That is what covers VSCode-hosted sessions. Hook state wins; the
+  registry is the fallback.
+- **Updates** — event-driven. Each hook fires `pkill -RTMIN+9 waybar`, so the
+  bar updates the moment a session changes. The 60 s `interval` is only a
+  safety net for sessions killed without firing `SessionEnd`.
+- **Focus** — `waybar/scripts/claude-sessions-focus.sh` walks the process
+  ancestry from the session's PID until it hits a PID sway knows as a window.
+  For a terminal that lands exactly on the emulator. Every VSCode window shares
+  one Electron main process, so there the walk only narrows it to "some VSCode
+  window" and the workspace folder in the title picks the right one — matched
+  as a whole `" - "` segment, since a substring match would send
+  `~/code/cassistant` to the `cassistant-ledger` window.
+
+The hooks live in `~/.claude/settings.json`, outside this repo, so
+`./setup.sh wayland` merges them in from `waybar/claude-hooks.json`. The merge
+is idempotent and leaves any unrelated hooks alone (it backs the file up first).
+
+Requires `jq`, `rofi` (for the picker) and a Nerd Font for the robot glyph.
+
 #### Required Packages (Wayland)
 
 ```bash
-sudo pacman -S sway waybar foot mako rofi grim slurp wl-clipboard brightnessctl
+sudo pacman -S sway waybar foot mako rofi grim slurp wl-clipboard brightnessctl jq
 ```
 
 ## File Structure
@@ -92,7 +139,12 @@ dotfiles/
 ├── waybar/                  # Waybar status bar
 │   ├── config               # Waybar config (JSON)
 │   ├── style.css            # Waybar styling
+│   ├── claude-hooks.json    # Claude Code hooks, merged into ~/.claude/settings.json
 │   └── scripts/             # Custom scripts
+│       ├── claude-sessions-lib.sh    # Session roster (shared)
+│       ├── claude-sessions.sh        # Widget renderer
+│       ├── claude-sessions-state.sh  # Claude Code hook handler
+│       └── claude-sessions-focus.sh  # Picker + window focus
 ├── foot/                    # Foot terminal config
 │   └── foot.ini
 ├── rofi/                    # Application launcher

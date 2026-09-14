@@ -243,13 +243,60 @@ setup_x11() {
     echo ""
 }
 
+# Merge the Claude Code session hooks into ~/.claude/settings.json.
+# These live outside the repo, so setup owns them. Idempotent: entries
+# pointing at our script are replaced rather than duplicated, and any
+# unrelated hooks the user has are left alone.
+install_claude_hooks() {
+    local settings="$HOME/.claude/settings.json"
+    local snippet="$DOTFILES_DIR/waybar/claude-hooks.json"
+    local marker='$HOME/.config/waybar/scripts/claude-sessions-state.sh'
+    local tmp
+
+    if ! command -v jq &> /dev/null; then
+        print_warning "jq not installed - skipping Claude Code session hooks"
+        return
+    fi
+
+    if [ ! -f "$snippet" ]; then
+        print_warning "waybar/claude-hooks.json missing - skipping Claude hooks"
+        return
+    fi
+
+    mkdir -p "$(dirname "$settings")"
+    [ -f "$settings" ] || echo '{}' > "$settings"
+
+    tmp=$(mktemp)
+    if jq --slurpfile snip "$snippet" --arg marker "$marker" '
+        reduce ($snip[0] | to_entries)[] as $e (.;
+          .hooks[$e.key] = (
+            ((.hooks[$e.key] // [])
+             | map(select([.hooks[]?.command // ""]
+                          | any(startswith($marker)) | not)))
+            + $e.value
+          ))
+    ' "$settings" > "$tmp" 2>/dev/null && [ -s "$tmp" ]; then
+        if jq -S . "$tmp" | cmp -s - <(jq -S . "$settings"); then
+            rm -f "$tmp"
+            print_success "Claude Code session hooks already up to date"
+        else
+            cp "$settings" "$settings.backup.$(date +%Y%m%d-%H%M%S)"
+            mv "$tmp" "$settings"
+            print_success "Claude Code session hooks installed (~/.claude/settings.json)"
+        fi
+    else
+        rm -f "$tmp"
+        print_error "Failed to merge Claude Code session hooks"
+    fi
+}
+
 # Setup Wayland (Sway) configuration
 setup_wayland() {
     print_header "Setting Up Wayland (Sway) Configuration"
 
     # Check for required packages
     MISSING_WAYLAND=()
-    for pkg in sway waybar foot grim slurp wl-clipboard brightnessctl mako rofi; do
+    for pkg in sway waybar foot grim slurp wl-clipboard brightnessctl mako rofi jq; do
         if ! check_package "$pkg"; then
             MISSING_WAYLAND+=("$pkg")
         fi
@@ -297,6 +344,9 @@ setup_wayland() {
 
     # Make waybar scripts executable
     chmod +x "$DOTFILES_DIR/waybar/scripts/"*.sh 2>/dev/null || true
+
+    # Claude Code session overview widget (waybar custom/claude-sessions)
+    install_claude_hooks
 
     # Setup Wayland shell environment
     ln -sf "$DOTFILES_DIR/.bashrc-wayland" ~/.bashrc-wayland

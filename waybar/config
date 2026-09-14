@@ -17,6 +17,7 @@
         "bluetooth",
         "custom/mic",
         "custom/recording",
+        "custom/claude-sessions",
         "custom/claude",
         "clock",
         "tray"
@@ -138,5 +139,21 @@
         "format": "{}",
         "markup": true,
         "on-click": "xdg-open https://claude.ai/settings/usage"
+    },
+
+    // Live Claude Code sessions across terminal + VSCode + all projects.
+    // Signal-driven: the hooks in ~/.claude/settings.json fire
+    // `pkill -RTMIN+9 waybar` on every state change; the interval is only a
+    // safety net for sessions that die without firing SessionEnd.
+    "custom/claude-sessions": {
+        "exec": "~/.config/waybar/scripts/claude-sessions.sh",
+        "return-type": "json",
+        "interval": 60,
+        "signal": 9,
+        "format": "{}",
+        "markup": true,
+        "on-click": "~/.config/waybar/scripts/claude-sessions-focus.sh",
+        "on-click-right": "~/.config/waybar/scripts/claude-sessions-focus.sh --urgent",
+        "on-click-middle": "foot -e bash -lc 'claude agents'"
     }
 }

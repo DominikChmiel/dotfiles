@@ -1,0 +1,72 @@
+{
+  "SessionStart": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh idle"
+        }
+      ]
+    }
+  ],
+  "UserPromptSubmit": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh busy"
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh idle"
+        }
+      ]
+    }
+  ],
+  "StopFailure": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh idle"
+        }
+      ]
+    }
+  ],
+  "SessionEnd": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh end"
+        }
+      ]
+    }
+  ],
+  "Notification": [
+    {
+      "matcher": "permission_prompt|agent_needs_input|elicitation_dialog|elicitation_url_dialog",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh waiting"
+        }
+      ]
+    },
+    {
+      "matcher": "idle_prompt",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "$HOME/.config/waybar/scripts/claude-sessions-state.sh idle"
+        }
+      ]
+    }
+  ]
+}

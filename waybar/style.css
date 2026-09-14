@@ -63,7 +63,8 @@ window#waybar.hidden {
 #tray,
 #custom-mic,
 #custom-recording,
-#custom-claude {
+#custom-claude,
+#custom-claude-sessions {
     padding: 0 6px 0 10px;
     color: #F3F4F5;
     font-family: "FontAwesome", "Arial";
@@ -81,6 +82,30 @@ window#waybar.hidden {
 
 #custom-claude.critical {
     background-color: rgba(224, 108, 117, 0.20);
+}
+
+/* claude-code session overview. Needs the Nerd Font for the robot glyph. */
+#custom-claude-sessions {
+    font-family: "SFMono Nerd Font Mono", "FontAwesome", monospace;
+    color: #F3F4F5;
+    min-width: 105px;
+}
+
+#custom-claude-sessions.busy {
+    color: #FFC123;
+}
+
+#custom-claude-sessions.needs-input {
+    color: #FF6565;
+    background-color: rgba(224, 108, 117, 0.20);
+}
+
+/* No sessions running: collapse the widget out of the way. */
+#custom-claude-sessions.none {
+    color: transparent;
+    min-width: 0;
+    padding: 0;
+    border-left: none;
 }
 
 #clock {
